@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webapp/functions/upload_file.dart';
+import 'package:webapp/model/inscricao_model.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
 class FormularioPrefLocal extends StatefulWidget {
   const FormularioPrefLocal({super.key, required this.etapa, required this.onSubmit});
 
   final String etapa;
-  final VoidCallback onSubmit;
+  final Function(String) onSubmit;
 
   @override
   State<FormularioPrefLocal> createState() => _FormularioPrefLocalState();
@@ -120,10 +123,21 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
               ),
             ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
           if (dropdownFormKey.currentState!.validate()) {
             inscricaoProvider.updateLocal(selectedValue);
-            widget.onSubmit();
+            inscricaoProvider.updateEtapa(widget.etapa);
+
+            final fileBatismo = inscricaoProvider.inscricaoInfo.batismo!['arquivo'];
+            String? urlBatismo = await UploadFile().upload(inscricaoProvider.inscricaoInfo.nome ?? '', fileBatismo, 'batismo', widget.etapa);
+            inscricaoProvider.updateBatismo({'arquivo': urlBatismo, 'possui': true});
+
+            final fileEucaristia = inscricaoProvider.inscricaoInfo.eucaristia!['arquivo'];
+            String? urlEucaristia = await UploadFile().upload(inscricaoProvider.inscricaoInfo.nome ?? '', fileEucaristia, 'eucaristia', widget.etapa);
+            inscricaoProvider.updateEucaristia({'arquivo': urlEucaristia, 'possui': true});
+
+            final String response = await addInscricao(inscricaoProvider.inscricaoInfo);
+            widget.onSubmit(response);
           }
         },
         label: const Text('Avançar', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -131,4 +145,9 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
       ),
     );
   }
+}
+
+Future<String> addInscricao(InscricaoModel model) async {
+  CollectionReference inscricoes = FirebaseFirestore.instance.collection('inscricoes');
+  return await inscricoes.add(model.toMap()).then((value) => value.id).catchError((error) => 'Não foi possível adicionar $error');
 }

@@ -115,7 +115,7 @@ class _FormularioBatismoState extends State<FormularioBatismo> {
             // Salva com o arquivo
             inscricaoProvider.updateBatismo({
               'possui': true,
-              'arquivo': file!.files.first.name,
+              'arquivo': file!.files[0],
             });
             widget.onSubmit();
           } else if (itens.first.checked && file == null) {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:webapp/pages/login/popup_login.dart';
 
 class LoginPage extends StatelessWidget {
-  // final VoidCallback onLogin;
+  final VoidCallback onLogin;
   final VoidCallback onRegisterClick;
-  const LoginPage({super.key, required this.onRegisterClick});
+  const LoginPage({super.key, required this.onRegisterClick, required this.onLogin});
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +13,28 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Pastoral catequetica - PCJ', style: Theme.of(context).textTheme.titleLarge),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(Icons.login, color: Colors.black),
+            padding: const EdgeInsets.only(right: 10),
+            child: InkWell(
+              onTap: () {
+                showDialog(context: context, builder: (context) => PopUpLogin(onLogin: onLogin));
+              },
+              borderRadius: BorderRadius.circular(15),
+              child: Ink(
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, borderRadius: const BorderRadius.all(Radius.circular(15))),
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Login', style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(width: 5),
+                    const Icon(Icons.login, color: Colors.white),
+                  ],
+                ),
+              ),
+            ),
           )
         ],
       ),
@@ -27,6 +47,17 @@ class LoginPage extends StatelessWidget {
               child: const Text('Inscrição', style: TextStyle(fontSize: 24)),
             ),
           ),
+        ],
+      ),
+      floatingActionButton: SpeedDial(
+        icon: Icons.menu,
+        activeIcon: Icons.close,
+        tooltip: 'Links',
+        label: const Text('Links', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+        children: [
+          SpeedDialChild(child: const Icon(Icons.photo_camera, color: Colors.white), label: 'Instagram', backgroundColor: Colors.pink),
+          SpeedDialChild(child: const Icon(Icons.book, color: Colors.white), label: 'Facebook', backgroundColor: Colors.blue),
+          SpeedDialChild(child: const Icon(Icons.language, color: Colors.white), label: 'Website', backgroundColor: Colors.indigo),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webapp/data/auth_repository.dart';
+import 'package:webapp/model/user_model.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthRepository? authRepository;
@@ -8,10 +9,10 @@ class AuthViewModel extends ChangeNotifier {
 
   AuthViewModel(this.authRepository);
 
-  Future<bool> login() async {
+  Future<bool> login(UserModel model) async {
     logingIn = true;
     notifyListeners();
-    final result = await authRepository!.login();
+    final result = await authRepository!.login(model);
     logingIn = false;
     notifyListeners();
     return result;

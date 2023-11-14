@@ -100,6 +100,13 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
     notifyListeners();
   }
 
+  String? _response;
+  String? get response => _response;
+  set response(value) {
+    _response = value;
+    notifyListeners();
+  }
+
   @override
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
@@ -117,6 +124,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       return MyAppConfiguration.register();
     } else if (loggedIn == false) {
       return MyAppConfiguration.login();
+    } else if (loggedIn == true) {
+      return MyAppConfiguration.home();
     } else if (loggedIn == null) {
       return MyAppConfiguration.splash();
     } else if (show404 == true) {
@@ -167,11 +176,16 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
 
   List<Page> get _unknownStack => [const NotFoundPageRoute()];
 
-  List<Page> get _sucessoStack => [
-        FormSucessoPageRoute(onSubmit: () {
-          _clear();
-        })
-      ];
+  List<Page> get _sucessoStack {
+    final response = this.response;
+    return [
+      FormSucessoPageRoute(
+          response: response!,
+          onSubmit: () {
+            _clear();
+          })
+    ];
+  }
 
   List<Page> get _registerStack {
     final formNomes = this.formNomes;
@@ -201,7 +215,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       if (formNomes != null && formLocal == true)
         FormLocalPageRoute(
           etapa: etapa,
-          onSubmit: () {
+          onSubmit: (response) {
+            this.response = response;
             _clear();
             sucessoPage = true;
           },
@@ -210,12 +225,15 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   }
 
   List<Page> get _loggedOutStack => [
-        LoginPageRoute(onRegisterClick: () => registerPage = true),
+        LoginPageRoute(
+          onRegisterClick: () => registerPage = true,
+          onLogin: () => loggedIn = true,
+        ),
       ];
 
   List<Page> get _loggedInStack {
     return [
-      const HomePageRoute(),
+      HomePageRoute(onLogout: () => loggedIn = false),
     ];
   }
 

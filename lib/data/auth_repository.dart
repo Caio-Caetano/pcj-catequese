@@ -1,22 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:common/cache/preference.dart';
+import 'package:webapp/model/user_model.dart';
 
-const String _Auth_Key = 'AuthKey';
+const String authKey = 'AuthKey';
 
 class AuthRepository {
   final Preference preference;
 
   AuthRepository(this.preference);
 
-  Future<bool> isUserLoggedIn() async => Future.delayed(const Duration(seconds: 2)).then((value) {
-        return preference.getBool(_Auth_Key, defaultValue: false);
-      });
+  Future<bool> isUserLoggedIn() async => await preference.getBool(authKey, defaultValue: false);
 
-  Future<bool> _updateLoginStatus(bool loggedIn) =>
-      Future.delayed(const Duration(seconds: 2)).then((value) {
-        return preference.putBool(_Auth_Key, loggedIn);
-      });
+  Future<bool> _updateLoginStatus(UserModel? model) async {
+    if (model != null) {
+      return await _searchUser(model);
+    } else { 
+      return await preference.putBool(authKey, false);
+    }
+  }
 
-  Future<bool> logout() => _updateLoginStatus(false);
+  Future<bool> _searchUser(UserModel model) async {
+    var users = await FirebaseFirestore.instance.collection('users').where('username', isEqualTo: model.username).get();
+    if (users.docs.isEmpty) return false;
+    var result = users.docs.first;
+    if (result.get('username') == model.username && result.get('senha') == model.senha) {
+      return await preference.putBool(authKey, true);
+    }
+    return false;
+  }
 
-  Future<bool> login() => _updateLoginStatus(true);
+  Future<bool> logout() => _updateLoginStatus(null);
+
+  Future<bool> login(UserModel model) => _updateLoginStatus(model);
 }

@@ -4,7 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   useMaterial3: true,
-  textTheme: GoogleFonts.titilliumWebTextTheme(),
+  textTheme: GoogleFonts.titilliumWebTextTheme(
+    const TextTheme(
+      bodyMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Colors.black),
+      bodySmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Colors.white),
+    ),
+  ),
   appBarTheme: const AppBarTheme(
     color: Colors.red,
     iconTheme: IconThemeData(color: Colors.white),

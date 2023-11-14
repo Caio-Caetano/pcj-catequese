@@ -114,7 +114,7 @@ class _FormularioEucaristiaState extends State<FormularioEucaristia> {
             // Salva com o arquivo
             inscricaoProvider.updateEucaristia({
               'possui': true,
-              'arquivo': file!.files.first.name,
+              'arquivo': file!.files[0],
             });
             widget.onSubmit();
           } else if (itens.first.checked && file == null) {
