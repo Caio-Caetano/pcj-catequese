@@ -77,13 +77,11 @@ class FormularioNomes extends StatelessWidget {
           // Verifique se pelo menos um dos campos foi preenchido
           if (nomeResponsavelController.text.isNotEmpty || nomeMaeController.text.isNotEmpty || nomePaiController.text.isNotEmpty) {
             if (key.currentState!.validate()) {
-              inscricaoProvider.updateNomes(
-                InscricaoModel()
-                  ..nome = nomeController.text
-                  ..nomeMae = nomeMaeController.text
-                  ..nomePai = nomePaiController.text
-                  ..nomeResponsavel = nomeResponsavelController.text
-              );
+              inscricaoProvider.updateNomes(InscricaoModel()
+                ..nome = nomeController.text.toLowerCase()
+                ..nomeMae = nomeMaeController.text
+                ..nomePai = nomePaiController.text
+                ..nomeResponsavel = nomeResponsavelController.text);
               onSubmit();
             }
           } else {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:webapp/pages/home/respostas/dialog_delete.dart';
 
-Widget cardResposta({required Map etapa}) {
-  
+Widget cardResposta({required Map etapa, required BuildContext context, required VoidCallback setstate}) {
   String inputDtInscricao = etapa['dataInscricao'];
   DateTime dateTime = DateTime.parse(inputDtInscricao);
   String formattedDate = DateFormat('dd/MM/yyyy - HH:mm').format(dateTime);
@@ -27,6 +27,24 @@ Widget cardResposta({required Map etapa}) {
             Text('Local escolhido: ${etapa['local']}'),
             Text('Data da inscrição: $formattedDate'),
             Text(etapa['etapa'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
+            Row(
+              children: [
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return deleteDialog(etapa['id'], () {
+                            Navigator.pop(context);
+                            setstate();
+                          });
+                        });
+                  },
+                  icon: const Icon(Icons.delete_forever, color: Colors.red),
+                ),
+              ],
+            )
           ],
         ),
       ),

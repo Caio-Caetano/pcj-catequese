@@ -3,9 +3,14 @@ import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/functions/create_excel.dart';
 import 'package:webapp/pages/home/respostas/card.dart';
 
-class RepostasPageView extends StatelessWidget {
+class RepostasPageView extends StatefulWidget {
   const RepostasPageView({super.key});
 
+  @override
+  State<RepostasPageView> createState() => _RepostasPageViewState();
+}
+
+class _RepostasPageViewState extends State<RepostasPageView> {
   @override
   Widget build(BuildContext context) {
     RespostasController controllerRespostas = RespostasController();
@@ -29,31 +34,33 @@ class RepostasPageView extends StatelessWidget {
               return const Center(child: Text('Sem dados.'));
             } else {
               inscricoes = snapshot.data;
-              return Column(
-                children: [
-                  InkWell(
-                    onTap: () async => await exportToExcel(inscricoes!),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(255, 140, 235, 143)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset('./assets/images/excel.png', width: 30),
-                          const SizedBox(width: 5),
-                          const Text('Exportar Excel'),
-                        ],
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () async => await exportToExcel(inscricoes!),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(255, 140, 235, 143)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset('./assets/images/excel.png', width: 30),
+                            const SizedBox(width: 5),
+                            const Text('Exportar Excel'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: inscricoes!.length,
-                    itemBuilder: (context, index) {
-                      return cardResposta(etapa: inscricoes![index]);
-                    },
-                  ),
-                ],
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: inscricoes!.length,
+                      itemBuilder: (context, index) {
+                        return cardResposta(etapa: inscricoes![index], context: context, setstate: () => setState(() {}));
+                      },
+                    ),
+                  ],
+                ),
               );
             }
           }),

@@ -5,8 +5,20 @@ class RespostasRepository {
     List<Map<String, dynamic>> listaInscricoes = [];
     var inscricoes = await FirebaseFirestore.instance.collection('inscricoes').get();
     for (var inscricao in inscricoes.docs) {
-      listaInscricoes.add(inscricao.data());
+      Map<String, dynamic> inscricaoData = inscricao.data();
+      inscricaoData['id'] = inscricao.id;
+      listaInscricoes.add(inscricaoData);
     }
     return listaInscricoes;
   }
+
+  Future<bool> verificaInscricao(String nome, String telefone) async {
+    var inscricao = await FirebaseFirestore.instance.collection('inscricoes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
+    if (inscricao.docs.isEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> deletarInscricao(String id) async => await FirebaseFirestore.instance.collection('inscricoes').doc(id).delete().then((value) => true).catchError((error) => false);
 }

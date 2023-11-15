@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:webapp/configureweb.dart';
 import 'package:webapp/data/auth_repository.dart';
 import 'package:webapp/firebase_options.dart';
+import 'package:webapp/providers/loading_notifier.dart';
 import 'package:webapp/router/my_app_delegate.dart';
 import 'package:webapp/router/my_app_route_information_parse.dart';
 import 'package:webapp/styles/dark_theme.dart';
@@ -31,8 +32,6 @@ class _MyAppState extends State<MyApp> {
   late MyAppRouteInformationParser parser;
   late AuthRepository authRepository;
 
-  
-
   @override
   void initState() {
     super.initState();
@@ -50,6 +49,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<InscricaoProvider>(
           create: (_) => InscricaoProvider(),
+        ),
+        ChangeNotifierProvider<LoadingClass>(
+          create: (_) => LoadingClass(),
         ),
       ],
       child: MaterialApp.router(

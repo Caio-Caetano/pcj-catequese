@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           SideMenu(
             controller: sideMenu,
-            footer: const Text('demo'),
+            footer: const Text('PCJ - Pastoral Catequetica'),
             items: items,
           ),
           Expanded(

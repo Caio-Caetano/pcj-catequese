@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webapp/functions/upload_file.dart';
-import 'package:webapp/model/inscricao_model.dart';
+import 'package:webapp/providers/loading_notifier.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
 class FormularioPrefLocal extends StatefulWidget {
@@ -23,11 +22,11 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
       // Terça ou Quinta 19h - Santuário
       // Sábado 9:30h - Santuário, Jd Portugal, Nsr Aparecida
       menuItems = [
-        const DropdownMenuItem(value: 'Terca 19h Santuario', child: Text('Terça-feira as 19h no Santuário')),
-        const DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h no Santuário')),
-        const DropdownMenuItem(value: 'Sabado 09:30h Santuario', child: Text('Sábado as 09:30h no Santuário')),
-        const DropdownMenuItem(value: 'Sabado 09:30h Jd Portugal', child: Text('Sábado as 09:30h no Jd Portugal')),
-        const DropdownMenuItem(value: 'Sabado 09:30h Nossa Senhora Aparecida', child: Text('Sábado as 09:30h na Nossa Senhora Aparecida')),
+        const DropdownMenuItem(value: 'Terca 19h Santuario', child: Text('Terça-feira as 19h as 20:30h no Santuário')),
+        const DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h as 20:30h no Santuário')),
+        const DropdownMenuItem(value: 'Sabado 9:30h Santuario', child: Text('Sábado as 9:30h as 11:00h no Santuário')),
+        const DropdownMenuItem(value: 'Sabado 9:30h Jd Portugal', child: Text('Sábado as 9:30h as 11:00h no Jd Portugal')),
+        const DropdownMenuItem(value: 'Sabado 9:30h Nossa Senhora Aparecida', child: Text('Sábado as 9:30h as 11:00h na Nossa Senhora Aparecida')),
       ];
     }
 
@@ -35,11 +34,11 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
       // Terça e Quinta 19h - Santuário
       // Sábado 8h - Santuário, Jd Portugal, Nsr Aparecida
       menuItems = [
-        const DropdownMenuItem(value: 'Terca 19h Santuario', child: Text('Terça-feira as 19h no Santuário')),
-        const DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h no Santuário')),
-        const DropdownMenuItem(value: 'Sabado 08h Santuario', child: Text('Sábado as 08h no Santuário')),
-        const DropdownMenuItem(value: 'Sabado 08h Jd Portugal', child: Text('Sábado as 08h no Jd Portugal')),
-        const DropdownMenuItem(value: 'Sabado 08h Nossa Senhora Aparecida', child: Text('Sábado as 08h na Nossa Senhora Aparecida')),
+        const DropdownMenuItem(value: 'Terca 19h Santuario', child: Text('Terça-feira as 19h as 20:30h no Santuário')),
+        const DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h as 20:30h no Santuário')),
+        const DropdownMenuItem(value: 'Sabado 8h Santuario', child: Text('Sábado as 8h as 9:30h no Santuário')),
+        const DropdownMenuItem(value: 'Sabado 8h Jd Portugal', child: Text('Sábado as 8h as 9:30h no Jd Portugal')),
+        const DropdownMenuItem(value: 'Sabado 8h Nossa Senhora Aparecida', child: Text('Sábado as 8h as 9:30h na Nossa Senhora Aparecida')),
       ];
     }
 
@@ -47,11 +46,11 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
       // Terça e Quinta 19h - Santuário
       // Sábado 8h - Santuário, Jd Portugal, Nsr Aparecida
       menuItems = [
-        const DropdownMenuItem(value: 'Terca 19h Santuario', child: Text('Terça-feira as 19h no Santuário')),
-        const DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h no Santuário')),
-        const DropdownMenuItem(value: 'Sabado 08h Santuario', child: Text('Sábado as 08h no Santuário')),
-        const DropdownMenuItem(value: 'Sabado 08h Jd Portugal', child: Text('Sábado as 08h no Jd Portugal')),
-        const DropdownMenuItem(value: 'Sabado 08h Nossa Senhora Aparecida', child: Text('Sábado as 08h na Nossa Senhora Aparecida')),
+        const DropdownMenuItem(value: 'Terca 19h Santuario', child: Text('Terça-feira as 19h as 20:30h no Santuário')),
+        const DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h as 20:30h no Santuário')),
+        const DropdownMenuItem(value: 'Sabado 8h Santuario', child: Text('Sábado as 8h as 9:30h no Santuário')),
+        const DropdownMenuItem(value: 'Sabado 8h Jd Portugal', child: Text('Sábado as 8h as 9:30h no Jd Portugal')),
+        const DropdownMenuItem(value: 'Sabado 8h Nossa Senhora Aparecida', child: Text('Sábado as 8h as 9:30h na Nossa Senhora Aparecida')),
       ];
     }
     return menuItems;
@@ -63,91 +62,111 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
   Widget build(BuildContext context) {
     final dropdownFormKey = GlobalKey<FormState>();
     final inscricaoProvider = Provider.of<InscricaoProvider>(context);
+    final loadingProvider = Provider.of<LoadingClass>(context);
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.etapa, style: const TextStyle(color: Colors.white)),
-      ),
-      body: widget.etapa != 'Adultos'
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                key: dropdownFormKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text(
-                        'Selecione o local de sua PREFERÊNCIA:',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                      const Text(
-                        'Lembrando: O local selecionado poderá ser alterado pela coordenação',
-                        style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
-                        textAlign: TextAlign.center,
-                      ),
-                      DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Selecione...',
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey[600]!, width: 2),
-                              borderRadius: BorderRadius.circular(20),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.etapa, style: const TextStyle(color: Colors.white)),
+        ),
+        body: widget.etapa != 'Adultos'
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: dropdownFormKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'Selecione o local de sua PREFERÊNCIA:',
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        const Text(
+                          'Lembrando: O local selecionado poderá ser alterado pela coordenação',
+                          style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                          textAlign: TextAlign.center,
+                        ),
+                        DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Selecione...',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey[600]!, width: 2),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey[600]!, width: 2),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[400],
                             ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey[600]!, width: 2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[400],
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                          validator: (value) => value == null ? "⚠️ É necessário escolher uma opção." : null,
-                          dropdownColor: Colors.grey[400],
-                          value: selectedValue,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedValue = newValue!;
-                            });
-                          },
-                          items: dropdownItems),
-                    ],
+                            borderRadius: BorderRadius.circular(20),
+                            validator: (value) => value == null ? "⚠️ É necessário escolher uma opção." : null,
+                            dropdownColor: Colors.grey[400],
+                            value: selectedValue,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedValue = newValue!;
+                              });
+                            },
+                            items: dropdownItems),
+                      ],
+                    ),
                   ),
+                ))
+            : const Center(
+                child: Text(
+                  'O seu local e horário de encontro será informado pela coordenação.',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
-              ))
-          : const Center(
-              child: Text(
-                'O seu local e horário de encontro será informado pela coordenação.',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
               ),
-            ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          if (dropdownFormKey.currentState!.validate()) {
-            inscricaoProvider.updateLocal(selectedValue);
-            inscricaoProvider.updateEtapa(widget.etapa);
+        floatingActionButton: loadingProvider.loading
+            ? FloatingActionButton.extended(label: const Text('Carregando...'), onPressed: () {})
+            : FloatingActionButton.extended(
+                onPressed: () async {
+                  if (dropdownFormKey.currentState!.validate()) {
+                    inscricaoProvider.updateLocal(selectedValue);
+                    inscricaoProvider.updateEtapa(widget.etapa);
 
-            final fileBatismo = inscricaoProvider.inscricaoInfo.batismo!['arquivo'];
-            String? urlBatismo = await UploadFile().upload(inscricaoProvider.inscricaoInfo.nome ?? '', fileBatismo, 'batismo', widget.etapa);
-            inscricaoProvider.updateBatismo({'arquivo': urlBatismo, 'possui': true});
+                    if (inscricaoProvider.inscricaoInfo.batismo != null) {
+                      final fileBatismo = inscricaoProvider.inscricaoInfo.batismo!['arquivo'];
+                      if (fileBatismo != null) {
+                        String? urlBatismo = await UploadFile().upload(inscricaoProvider.inscricaoInfo.nome ?? '', fileBatismo, 'batismo', widget.etapa);
+                        inscricaoProvider.updateBatismo({'arquivo': urlBatismo, 'possui': true});
+                      }
+                    }
 
-            final fileEucaristia = inscricaoProvider.inscricaoInfo.eucaristia!['arquivo'];
-            String? urlEucaristia = await UploadFile().upload(inscricaoProvider.inscricaoInfo.nome ?? '', fileEucaristia, 'eucaristia', widget.etapa);
-            inscricaoProvider.updateEucaristia({'arquivo': urlEucaristia, 'possui': true});
+                    if (inscricaoProvider.inscricaoInfo.eucaristia != null) {
+                      final fileEucaristia = inscricaoProvider.inscricaoInfo.eucaristia!['arquivo'];
+                      if (fileEucaristia != null) {
+                        String? urlEucaristia = await UploadFile().upload(inscricaoProvider.inscricaoInfo.nome ?? '', fileEucaristia, 'eucaristia', widget.etapa);
+                        inscricaoProvider.updateEucaristia({'arquivo': urlEucaristia, 'possui': true});
+                      }
+                    }
 
-            final String response = await addInscricao(inscricaoProvider.inscricaoInfo);
-            widget.onSubmit(response);
-          }
-        },
-        label: const Text('Avançar', style: TextStyle(fontWeight: FontWeight.bold)),
-        icon: const Icon(Icons.forward),
-      ),
-    );
+                    final Map<String, dynamic> response = await loadingProvider.addInscricao(inscricaoProvider.inscricaoInfo);
+                    final String responseMessage = response['message'];
+                    if (response['sucesso']) {
+                      widget.onSubmit(response['message']);
+                    } else {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.yellow,
+                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+                          content: Text('⚠️ $responseMessage', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
+                        ),
+                      );
+                    }
+                  }
+                },
+                label: const Text('Avançar', style: TextStyle(fontWeight: FontWeight.bold)),
+                icon: const Icon(Icons.forward),
+              ));
   }
-}
-
-Future<String> addInscricao(InscricaoModel model) async {
-  CollectionReference inscricoes = FirebaseFirestore.instance.collection('inscricoes');
-  return await inscricoes.add(model.toMap()).then((value) => value.id).catchError((error) => 'Não foi possível adicionar $error');
 }

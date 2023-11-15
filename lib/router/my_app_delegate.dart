@@ -156,6 +156,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       key: navigatorKey,
       pages: stack,
       onPopPage: (route, result) {
+        _clear();
         if (!route.didPop(result)) return false;
         return true;
       },

@@ -87,7 +87,7 @@ class _FormularioEucaristiaState extends State<FormularioEucaristia> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.file_upload, size: 35, color: Theme.of(context).colorScheme.primary),
-                      Text('Envie o batistério', style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary, fontSize: 18)),
+                      Text('Envie a lembrança\nda 1º Eucaristia', style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary, fontSize: 18)),
                     ],
                   ),
                 ),
