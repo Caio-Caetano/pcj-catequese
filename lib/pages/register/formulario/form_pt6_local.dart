@@ -131,6 +131,8 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
                     inscricaoProvider.updateLocal(selectedValue);
                     inscricaoProvider.updateEtapa(widget.etapa);
 
+                    loadingProvider.setLoading();
+
                     if (inscricaoProvider.inscricaoInfo.batismo != null) {
                       final fileBatismo = inscricaoProvider.inscricaoInfo.batismo!['arquivo'];
                       if (fileBatismo != null) {
@@ -146,6 +148,8 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
                         inscricaoProvider.updateEucaristia({'arquivo': urlEucaristia, 'possui': true});
                       }
                     }
+
+                    loadingProvider.setLoading();
 
                     final Map<String, dynamic> response = await loadingProvider.addInscricao(inscricaoProvider.inscricaoInfo);
                     final String responseMessage = response['message'];

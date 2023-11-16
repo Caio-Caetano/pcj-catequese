@@ -8,6 +8,11 @@ class LoadingClass extends ChangeNotifier {
 
   get loading => _loading;
 
+  setLoading() {
+    _loading =  !_loading;
+    notifyListeners();
+  }
+
   Future<Map<String, dynamic>> addInscricao(InscricaoModel model) async {
     _loading = true;
     notifyListeners();

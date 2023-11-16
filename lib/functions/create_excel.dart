@@ -5,6 +5,7 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
   var sheet = excel['Sheet1'];
 
   var headers = [
+    'id',
     'dataInscricao',
     'nome',
     'dataNascimento',
@@ -41,7 +42,7 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
       if (value is Map) {
         value.forEach((key, value) {
           var flag = headers.indexOf('$parent-$key');
-          sheet.cell(CellIndex.indexByColumnRow(rowIndex: indexRow, columnIndex: flag)).value = value;
+          sheet.cell(CellIndex.indexByColumnRow(rowIndex: indexRow, columnIndex: flag)).value = value is bool ? value.toString() : value;
         });
       } else {
         if (value != null) {
