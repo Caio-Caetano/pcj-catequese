@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       child: MaterialApp.router(
+        title: 'Catequese PCJ',
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.light,

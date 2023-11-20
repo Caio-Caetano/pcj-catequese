@@ -31,111 +31,113 @@ class _FormularioEnderecoState extends State<FormularioEndereco> {
     final GlobalKey<FormState> key = GlobalKey<FormState>();
 
     final maskFormatter = MaskTextInputFormatter(mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
-    
+
     final inscricaoProvider = Provider.of<InscricaoProvider>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.etapa, style: const TextStyle(color: Colors.white)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: key,
-          child: Column(
-            children: [
-              TextFieldCustom(
-                controller: cepController,
-                formatter: [maskFormatter],
-                labelText: 'Digite o seu CEP:',
-                iconPrefix: const Icon(Icons.pin_drop),
-                onChanged: (value) async {
-                  if (value.length == 9) {
-                    setState(() {
-                      isLoading = true;
-                    });
-
-                    final viaCepSearchCep = ViaCepSearchCep();
-                    final infoCepJson = await viaCepSearchCep.searchInfoByCep(cep: maskFormatter.getUnmaskedText());
-
-                    setState(() {
-                      isLoading = false;
-                      hintText = value;
-                      infoCepJson.fold((l) {
-                        cepInfo = null;
-                        return cepError = l.errorMessage;
-                      }, (data) {
-                        cepError = null;
-                        return cepInfo = data;
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: key,
+            child: Column(
+              children: [
+                TextFieldCustom(
+                  controller: cepController,
+                  formatter: [maskFormatter],
+                  labelText: 'Digite o seu CEP:',
+                  iconPrefix: const Icon(Icons.pin_drop),
+                  onChanged: (value) async {
+                    if (value.length == 9) {
+                      setState(() {
+                        isLoading = true;
                       });
-                    });
-                  }
-                },
-                hintText: hintText,
-              ),
-              if (isLoading) const Text('Buscando o seu endereço...'),
-              if (cepError != null) Text('[Erro] -> $cepError', style: const TextStyle()),
-              if (cepInfo != null)
-                Column(
-                  children: [
-                    const SizedBox(height: 15),
-                    TextFieldCustom(
-                      controller: TextEditingController(),
-                      labelText: 'Rua:',
-                      readOnly: true,
-                      hintText: cepInfo!.logradouro,
-                    ),
-                    const SizedBox(height: 15),
-                    TextFieldCustom(
-                      controller: TextEditingController(),
-                      labelText: 'Bairro:',
-                      readOnly: true,
-                      hintText: cepInfo!.bairro,
-                    ),
-                    const SizedBox(height: 15),
-                    TextFieldCustom(
-                      controller: TextEditingController(),
-                      labelText: 'Cidade:',
-                      readOnly: true,
-                      hintText: cepInfo!.localidade,
-                    ),
-                    const SizedBox(height: 15),
-                    TextFieldCustom(
-                      controller: TextEditingController(),
-                      labelText: 'Estado',
-                      readOnly: true,
-                      hintText: cepInfo!.uf,
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFieldCustom(
-                            controller: numeroController,
-                            labelText: 'Número:',
-                            hintText: 'Digite o número de sua residência*',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '⚠️ Este campo é obrigatório.';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: TextFieldCustom(
-                            controller: complementoController,
-                            labelText: 'Complemento',
-                            hintText: 'Caso tenha complemento.',
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
+
+                      final viaCepSearchCep = ViaCepSearchCep();
+                      final infoCepJson = await viaCepSearchCep.searchInfoByCep(cep: maskFormatter.getUnmaskedText());
+
+                      setState(() {
+                        isLoading = false;
+                        hintText = value;
+                        infoCepJson.fold((l) {
+                          cepInfo = null;
+                          return cepError = l.errorMessage;
+                        }, (data) {
+                          cepError = null;
+                          return cepInfo = data;
+                        });
+                      });
+                    }
+                  },
+                  hintText: hintText,
                 ),
-            ],
+                if (isLoading) const Text('Buscando o seu endereço...'),
+                if (cepError != null) Text('[Erro] -> $cepError', style: const TextStyle()),
+                if (cepInfo != null)
+                  Column(
+                    children: [
+                      const SizedBox(height: 15),
+                      TextFieldCustom(
+                        controller: TextEditingController(),
+                        labelText: 'Rua:',
+                        readOnly: true,
+                        hintText: cepInfo!.logradouro,
+                      ),
+                      const SizedBox(height: 15),
+                      TextFieldCustom(
+                        controller: TextEditingController(),
+                        labelText: 'Bairro:',
+                        readOnly: true,
+                        hintText: cepInfo!.bairro,
+                      ),
+                      const SizedBox(height: 15),
+                      TextFieldCustom(
+                        controller: TextEditingController(),
+                        labelText: 'Cidade:',
+                        readOnly: true,
+                        hintText: cepInfo!.localidade,
+                      ),
+                      const SizedBox(height: 15),
+                      TextFieldCustom(
+                        controller: TextEditingController(),
+                        labelText: 'Estado',
+                        readOnly: true,
+                        hintText: cepInfo!.uf,
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFieldCustom(
+                              controller: numeroController,
+                              labelText: 'Número:',
+                              hintText: 'Digite o número de sua residência*',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return '⚠️ Este campo é obrigatório.';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: TextFieldCustom(
+                              controller: complementoController,
+                              labelText: 'Complemento',
+                              hintText: 'Caso tenha complemento.',
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -155,7 +157,10 @@ class _FormularioEnderecoState extends State<FormularioEndereco> {
               widget.onSubmit();
             }
           } else if (cepError != null) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Por favor digite o CEP corretamente antes de prosseguir.', style: TextStyle(fontWeight: FontWeight.bold)), backgroundColor: Colors.yellow,));
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Por favor digite o CEP corretamente antes de prosseguir.', style: TextStyle(fontWeight: FontWeight.bold)),
+              backgroundColor: Colors.yellow,
+            ));
           }
         },
         label: const Text('Avançar', style: TextStyle(fontWeight: FontWeight.bold)),

@@ -26,49 +26,51 @@ class FormularioNomes extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(etapa, style: const TextStyle(color: Colors.white)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: key,
-          child: Wrap(
-            runSpacing: 20,
-            children: [
-              TextFieldCustom(
-                controller: nomeController,
-                labelText: 'Nome:',
-                iconPrefix: const Icon(Icons.person),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '⚠️ Este campo é obrigatório.';
-                  }
-                  return null;
-                },
-                hintText: 'Digite o nome*',
-              ),
-              TextFieldCustom(
-                controller: nomeMaeController,
-                labelText: 'Nome da mãe:',
-                iconPrefix: const Icon(Icons.person),
-                hintText: 'Digite o da mãe',
-              ),
-              TextFieldCustom(
-                controller: nomePaiController,
-                labelText: 'Nome do pai:',
-                iconPrefix: const Icon(Icons.person),
-                hintText: 'Digite o do pai',
-              ),
-              TextFieldCustom(
-                controller: nomeResponsavelController,
-                labelText: 'Nome do Responsável:',
-                iconPrefix: const Icon(Icons.person),
-                hintText: 'Digite o nome do responsável',
-              ),
-              const Text(
-                'É necessário o preenchimento de pelo menos um nome de responsável. Mãe, Pai ou Outro.',
-                style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
-                textAlign: TextAlign.center,
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: key,
+            child: Wrap(
+              runSpacing: 20,
+              children: [
+                TextFieldCustom(
+                  controller: nomeController,
+                  labelText: 'Nome:',
+                  iconPrefix: const Icon(Icons.person),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '⚠️ Este campo é obrigatório.';
+                    }
+                    return null;
+                  },
+                  hintText: 'Digite o nome*',
+                ),
+                TextFieldCustom(
+                  controller: nomeMaeController,
+                  labelText: 'Nome da mãe:',
+                  iconPrefix: const Icon(Icons.person),
+                  hintText: 'Digite o da mãe',
+                ),
+                TextFieldCustom(
+                  controller: nomePaiController,
+                  labelText: 'Nome do pai:',
+                  iconPrefix: const Icon(Icons.person),
+                  hintText: 'Digite o do pai',
+                ),
+                TextFieldCustom(
+                  controller: nomeResponsavelController,
+                  labelText: 'Nome do Responsável:',
+                  iconPrefix: const Icon(Icons.person),
+                  hintText: 'Digite o nome do responsável',
+                ),
+                const Text(
+                  'É necessário o preenchimento de pelo menos um nome de responsável. Mãe, Pai ou Outro.',
+                  style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),
