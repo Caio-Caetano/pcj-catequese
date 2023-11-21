@@ -1,6 +1,6 @@
 {
-    "name": "webapp",
-    "short_name": "webapp",
+    "name": "Catequese PCJ",
+    "short_name": "Catequese PCJ",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

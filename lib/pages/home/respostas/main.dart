@@ -37,6 +37,7 @@ class _RepostasPageViewState extends State<RepostasPageView> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
+                    Text('Total de inscrições: ${inscricoes?.length}'),
                     InkWell(
                       onTap: () async => await exportToExcel(inscricoes!),
                       child: Container(

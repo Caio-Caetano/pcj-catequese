@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:webapp/controller/config_controller.dart';
 import 'package:webapp/pages/login/popup_login.dart';
 
 class LoginPage extends StatelessWidget {
@@ -9,6 +10,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ConfigController configController = ConfigController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -38,16 +40,45 @@ class LoginPage extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: ElevatedButton(
-              onPressed: onRegisterClick,
-              child: const Text('Inscrição', style: TextStyle(fontSize: 24)),
+      body: Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Container(
+              width: 250,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Aviso!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text('O formulário para inscrição será liberado a partir do dia 01/12, e com vagas limitadas.'),
+                ],
+              ),
             ),
-          ),
-        ],
+            const Spacer(),
+            FutureBuilder(
+                future: configController.getFormAberto(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    bool open = snapshot.data ?? false;
+                    return open
+                        ? Center(
+                            child: ElevatedButton(
+                              onPressed: onRegisterClick,
+                              child: const Text('Inscrição', style: TextStyle(fontSize: 24)),
+                            ),
+                          )
+                        : const Text('Inscrições fechadas');
+                  }
+                  return Container();
+                }),
+            const Spacer(),
+          ],
+        ),
       ),
       floatingActionButton: SpeedDial(
         icon: Icons.menu,

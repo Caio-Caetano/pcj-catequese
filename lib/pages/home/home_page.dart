@@ -1,6 +1,7 @@
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webapp/pages/home/configuracoes/main.dart';
 import 'package:webapp/pages/home/respostas/main.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 
@@ -70,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           await authViewModel.logout();
           widget.onLogout();
         },
-        icon: const Icon(Icons.logout),
+        icon: const Icon(Icons.logout, color: Colors.red),
       ),
     ];
 
@@ -93,8 +94,15 @@ class _HomePageState extends State<HomePage> {
               children: const [
                 RepostasPageView(),
                 Center(
-                  child: Text('Settings', style: TextStyle(color: Colors.black)),
+                  child: Text('Etapas', style: TextStyle(color: Colors.black)),
                 ),
+                Center(
+                  child: Text('Catequistas', style: TextStyle(color: Colors.black)),
+                ),
+                Center(
+                  child: Text('Avisos', style: TextStyle(color: Colors.black)),
+                ),
+                ConfigPage(),
               ],
             ),
           ),
