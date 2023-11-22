@@ -41,43 +41,45 @@ class LoginPage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Container(
-              width: 250,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
+        child: FutureBuilder(
+          future: configController.getFormAberto(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              bool open = snapshot.data ?? false;
+              return Column(
                 children: [
-                  Text('Aviso!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('O formulário para inscrição será liberado a partir do dia 01/12, e com vagas limitadas.'),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: 250,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Aviso!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        open ? const Text('O formulário está aberto e com vagas limitadas.') : const Text('O formulário para inscrição será liberado a partir do dia 01/12, e com vagas limitadas.'),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  if (open)
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: onRegisterClick,
+                        child: const Text('Inscrição', style: TextStyle(fontSize: 24)),
+                      ),
+                    )
+                  else
+                    const Text('Inscrição Fechadas', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  const Spacer(),
                 ],
-              ),
-            ),
-            const Spacer(),
-            FutureBuilder(
-                future: configController.getFormAberto(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    bool open = snapshot.data ?? false;
-                    return open
-                        ? Center(
-                            child: ElevatedButton(
-                              onPressed: onRegisterClick,
-                              child: const Text('Inscrição', style: TextStyle(fontSize: 24)),
-                            ),
-                          )
-                        : const Text('Inscrições fechadas');
-                  }
-                  return Container();
-                }),
-            const Spacer(),
-          ],
+              );
+            }
+            return Container();
+          },
         ),
       ),
       floatingActionButton: SpeedDial(
