@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:webapp/pages/home/respostas/dialog_delete.dart';
+import 'package:webapp/pages/widgets/snackbar_custom.dart';
 
 Widget cardResposta({required Map etapa, required BuildContext context, required VoidCallback setstate}) {
   String inputDtInscricao = etapa['dataInscricao'];
@@ -30,6 +31,20 @@ Widget cardResposta({required Map etapa, required BuildContext context, required
             Row(
               children: [
                 const Spacer(),
+                // IconButton(
+                //   onPressed: () {
+                //     showDialog(
+                //         context: context,
+                //         builder: (context) {
+                //           return editDialog(() {
+                //             Navigator.pop(context);
+                //             setstate();
+                //           });
+                //         }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('✅ Editado com sucesso!')));
+                //   },
+                //   icon: const Icon(Icons.edit, color: Colors.grey),
+                // ),
+                // const SizedBox(width: 5),
                 IconButton(
                   onPressed: () {
                     showDialog(
@@ -39,7 +54,7 @@ Widget cardResposta({required Map etapa, required BuildContext context, required
                             Navigator.pop(context);
                             setstate();
                           });
-                        });
+                        }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!')));
                   },
                   icon: const Icon(Icons.delete_forever, color: Colors.red),
                 ),

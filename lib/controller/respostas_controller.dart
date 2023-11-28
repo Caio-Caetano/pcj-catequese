@@ -1,7 +1,8 @@
 import 'package:webapp/data/respostas_repository.dart';
 
 class RespostasController {
-  final RespostasRepository _repository = RespostasRepository();
+  RespostasController(this._repository);
+  final RespostasRepository _repository;
 
   Future<List<Map<String, dynamic>>> getAllRespostas() async => await _repository.getAllInscricoes();
 

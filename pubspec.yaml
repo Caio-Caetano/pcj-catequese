@@ -53,6 +53,7 @@ dependencies:
   excel: ^3.0.0
   path: ^1.8.3
   firebase_storage: ^11.5.0
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

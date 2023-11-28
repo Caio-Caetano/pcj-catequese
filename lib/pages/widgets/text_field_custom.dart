@@ -42,15 +42,16 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(widget.labelText ?? '', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: widget.labelColor)),
-            ),
-          ],
-        ),
+        if (widget.labelText != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(widget.labelText ?? '', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: widget.labelColor)),
+              ),
+            ],
+          ),
         TextFormField(
           controller: widget.controller,
           inputFormatters: widget.formatter,
@@ -62,6 +63,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
           decoration: InputDecoration(
             prefixIcon: widget.iconPrefix,
             hintText: widget.hintText,
+            hintStyle: Theme.of(context).textTheme.labelLarge,
             suffixIcon: !widget.isPassword!
                 ? null
                 : IconButton(

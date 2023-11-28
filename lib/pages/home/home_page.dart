@@ -1,6 +1,9 @@
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:webapp/controller/respostas_controller.dart';
+import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/pages/home/catequistas/main_admin.dart';
 import 'package:webapp/pages/home/configuracoes/main.dart';
 import 'package:webapp/pages/home/respostas/main.dart';
@@ -67,13 +70,80 @@ class _HomePageState extends State<HomePage> {
         icon: const Icon(Icons.settings),
       ),
       SideMenuItem(
-        title: 'Sair',
-        onTap: (_, __) async {
-          await authViewModel.logout();
-          widget.onLogout();
+        builder: (context, displayMode) {
+          if (displayMode == SideMenuDisplayMode.open) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await authViewModel.logout();
+                    widget.onLogout();
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.logout, size: 20),
+                      SizedBox(width: 10),
+                      Text(
+                        'Sair',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return Center(
+              child: IconButton(
+                onPressed: () async {
+                  await authViewModel.logout();
+                  widget.onLogout();
+                },
+                icon: const Icon(Icons.logout, color: Colors.red),
+              ),
+            );
+          }
         },
-        icon: const Icon(Icons.logout, color: Colors.red),
       ),
+      SideMenuItem(
+        builder: (context, displayMode) {
+          RespostasController controllerRespostas = RespostasController(RespostasRepository());
+          return Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: FutureBuilder(
+              future: controllerRespostas.getAllRespostas(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: Text('Carregando...'));
+                }
+
+                if (displayMode == SideMenuDisplayMode.open) {
+                  return Center(
+                    child: CircularPercentIndicator(
+                      animation: true,
+                      radius: 60.0,
+                      lineWidth: 5.0,
+                      percent: 1.0,
+                      center: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('Inscrições'),
+                          Text('${snapshot.data?.length}'),
+                        ],
+                      ),
+                      progressColor: Colors.green,
+                    ),
+                  );
+                } else {
+                  return Center(child: Text('${snapshot.data?.length}'));
+                }
+              },
+            ),
+          );
+        },
+      )
     ];
 
     return Scaffold(
