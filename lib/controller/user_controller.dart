@@ -6,4 +6,10 @@ class UserController {
   UserController(this._userRepository);
 
   Future<String> createUser(UserModel model) async => await _userRepository.userAdd(model);
+
+  Future<List<Map<String, dynamic>>> getUsuarios() async => await _userRepository.getUsers();
+
+  Future<void> editUser(UserModel model) async => await _userRepository.editUsuario(model);
+
+  Future<bool> deleteUsuario(String id) async => await _userRepository.deleteUsuario(id);
 }

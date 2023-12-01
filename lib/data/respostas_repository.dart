@@ -12,6 +12,17 @@ class RespostasRepository {
     return listaInscricoes;
   }
 
+  Future<List<Map<String, dynamic>>> getInscricoes({String? etapa}) async {
+    List<Map<String, dynamic>> listaInscricoes = [];
+    var inscricoes = await getAllInscricoes();
+    for (var e in inscricoes) {
+      if (e['etapa'].contains(etapa)) {
+        listaInscricoes.add(e);
+      }
+    }
+    return listaInscricoes;
+  }
+
   Future<bool> verificaInscricao(String nome, String telefone) async {
     var inscricao = await FirebaseFirestore.instance.collection('inscricoes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
     if (inscricao.docs.isEmpty) {

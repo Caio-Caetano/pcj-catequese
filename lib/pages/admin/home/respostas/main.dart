@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/functions/create_excel.dart';
-import 'package:webapp/pages/home/respostas/list.dart';
+import 'package:webapp/pages/admin/home/respostas/list.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 
 class RepostasPageView extends StatefulWidget {
@@ -74,7 +74,8 @@ class _RepostasPageViewState extends State<RepostasPageView> {
               inscricoes,
               () => setState(() {
                     getInscricoes();
-                  })),
+                  }), 2,),
+              
         ],
       ),
     );

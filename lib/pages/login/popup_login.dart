@@ -5,7 +5,7 @@ import 'package:webapp/pages/widgets/text_field_custom.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 
 class PopUpLogin extends StatelessWidget {
-  final VoidCallback onLogin;
+  final Function(int) onLogin;
   const PopUpLogin({super.key, required this.onLogin});
 
   @override
@@ -57,8 +57,8 @@ class PopUpLogin extends StatelessWidget {
                       username: usernameController.text.trim(),
                       senha: passwordController.text.trim(),
                     ));
-                    if (result) {
-                      onLogin();
+                    if (result != null) {
+                      onLogin(result.level ?? 0);
                     } else {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

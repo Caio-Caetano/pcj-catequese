@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:webapp/pages/home/home_page.dart';
+import 'package:webapp/pages/admin/home/home_page.dart';
 
-class HomePageRoute extends Page {
+class HomePageRouteCatequista extends Page {
   final VoidCallback onLogout;
-  const HomePageRoute({required this.onLogout}) : super(key: const ValueKey('HomePage'));
+  const HomePageRouteCatequista({required this.onLogout}) : super(key: const ValueKey('HomePageCatequista'));
 
   @override
   Route createRoute(BuildContext context) {

@@ -4,9 +4,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
-import 'package:webapp/pages/home/catequistas/main_admin.dart';
-import 'package:webapp/pages/home/configuracoes/main.dart';
-import 'package:webapp/pages/home/respostas/main.dart';
+import 'package:webapp/pages/admin/home/catequistas/main_admin.dart';
+import 'package:webapp/pages/admin/home/configuracoes/main.dart';
+import 'package:webapp/pages/admin/home/respostas/main.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context, displayMode) {
           if (displayMode == SideMenuDisplayMode.open) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Center(
                 child: ElevatedButton(
                   onPressed: () async {
