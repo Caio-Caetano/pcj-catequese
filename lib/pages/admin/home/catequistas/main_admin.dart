@@ -58,45 +58,47 @@ class _CatequistasMainAdminState extends State<CatequistasMainAdmin> {
             ),
           ],
         ),
-        FutureBuilder(
-            future: userController.getUsuarios(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: Text('Carregando...'));
-              }
+        Expanded(
+          child: FutureBuilder(
+              future: userController.getUsuarios(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: Text('Carregando...'));
+                }
 
-              if (snapshot.hasError) {
-                return Center(child: Text('Erro ao carregar!\n${snapshot.error}'));
-              }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Erro ao carregar!\n${snapshot.error}'));
+                }
 
-              usuarios = snapshot.data ?? [];
+                usuarios = snapshot.data ?? [];
 
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: usuarios.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onLongPress: () => showDialog(
-                        context: context,
-                        builder: (context) => UserDeleteDialog(
-                            id: usuarios[index]['id'],
-                            back: () {
-                              Navigator.pop(context);
-                              setState(() {});
-                            })),
-                    onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => UserEditDialog(
-                            map: usuarios[index],
-                            back: () {
-                              Navigator.pop(context);
-                              setState(() {});
-                            })),
-                    child: cardUsuario(usuario: usuarios[index]),
-                  );
-                },
-              );
-            }),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: usuarios.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onLongPress: () => showDialog(
+                          context: context,
+                          builder: (context) => UserDeleteDialog(
+                              id: usuarios[index]['id'],
+                              back: () {
+                                Navigator.pop(context);
+                                setState(() {});
+                              })),
+                      onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => UserEditDialog(
+                              map: usuarios[index],
+                              back: () {
+                                Navigator.pop(context);
+                                setState(() {});
+                              })),
+                      child: cardUsuario(usuario: usuarios[index]),
+                    );
+                  },
+                );
+              }),
+        ),
       ],
     );
   }

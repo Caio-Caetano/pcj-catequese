@@ -25,41 +25,43 @@ Widget cardResposta({required Map etapa, required BuildContext context, required
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(etapa['nome'], style: const TextStyle(fontSize: 18)),
-            Text('Local escolhido: ${etapa['local']}'),
+            Text('Local escolhido: ${etapa['local'] ?? 'A definir'}'),
             Text('Data da inscrição: $formattedDate'),
+            Text('Contato: ${etapa['telefone']}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
             Text(etapa['etapa'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
-            if (accessLevel == 2) Row(
-              children: [
-                const Spacer(),
-                // IconButton(
-                //   onPressed: () {
-                //     showDialog(
-                //         context: context,
-                //         builder: (context) {
-                //           return editDialog(() {
-                //             Navigator.pop(context);
-                //             setstate();
-                //           });
-                //         }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('✅ Editado com sucesso!')));
-                //   },
-                //   icon: const Icon(Icons.edit, color: Colors.grey),
-                // ),
-                // const SizedBox(width: 5),
-                IconButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return deleteDialog(etapa['id'], () {
-                            Navigator.pop(context);
-                            setstate();
-                          });
-                        }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!')));
-                  },
-                  icon: const Icon(Icons.delete_forever, color: Colors.red),
-                ),
-              ],
-            )
+            if (accessLevel == 2)
+              Row(
+                children: [
+                  const Spacer(),
+                  // IconButton(
+                  //   onPressed: () {
+                  //     showDialog(
+                  //         context: context,
+                  //         builder: (context) {
+                  //           return editDialog(() {
+                  //             Navigator.pop(context);
+                  //             setstate();
+                  //           });
+                  //         }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('✅ Editado com sucesso!')));
+                  //   },
+                  //   icon: const Icon(Icons.edit, color: Colors.grey),
+                  // ),
+                  // const SizedBox(width: 5),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return deleteDialog(etapa['id'], () {
+                              Navigator.pop(context);
+                              setstate();
+                            });
+                          }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!')));
+                    },
+                    icon: const Icon(Icons.delete_forever, color: Colors.red),
+                  ),
+                ],
+              )
           ],
         ),
       ),

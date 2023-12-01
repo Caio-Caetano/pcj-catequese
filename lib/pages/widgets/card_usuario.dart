@@ -20,7 +20,7 @@ Widget cardUsuario({required Map<String, dynamic> usuario}) {
             Text('Data de nascimento: ${usuario['dtNascimento']}', style: const TextStyle(fontSize: 18)),
             Text('Usuário: ${usuario['username']}', style: const TextStyle(fontSize: 15)),
             Text('Coordenador: ${(usuario['level'] == 1 || usuario['level'] == 2) ? 'Sim - ${usuario['etapaCoord']}' : 'Não'}', style: const TextStyle(fontSize: 15)),
-            Text('Etapa: ${usuario['etapa']}', style: const TextStyle(fontSize: 15)),
+            Text('Etapa: ${usuario['etapa'] ?? 'Sem etapa definida'}', style: const TextStyle(fontSize: 15)),
           ],
         ),
       ),
