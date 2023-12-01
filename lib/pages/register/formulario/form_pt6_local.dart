@@ -127,7 +127,7 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
             ? FloatingActionButton.extended(label: const Text('Carregando...'), onPressed: () {})
             : FloatingActionButton.extended(
                 onPressed: () async {
-                  if (dropdownFormKey.currentState!.validate()) {
+                  if (dropdownFormKey.currentState == null || dropdownFormKey.currentState!.validate()) {
                     inscricaoProvider.updateLocal(selectedValue);
                     inscricaoProvider.updateEtapa(widget.etapa);
 

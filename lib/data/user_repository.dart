@@ -23,9 +23,13 @@ class UserRepository {
     return listaUsuarios;
   }
 
-  Future<void> editUsuario(UserModel model) async {
+  Future<void> editUsuario(UserModel model, String oldSenha) async {
     String senhaEncrypted = _encryptPassword(model.senha ?? '');
-    model.senha = senhaEncrypted;
+    if (oldSenha != senhaEncrypted && model.senha != null) {
+      model.senha = senhaEncrypted;
+    } else {
+      model.senha = oldSenha;
+    }
     await FirebaseFirestore.instance.collection('users').doc(model.id).update(model.toMap());
   }
 

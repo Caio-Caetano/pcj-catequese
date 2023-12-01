@@ -150,6 +150,7 @@ class _UserEditDialogState extends State<UserEditDialog> {
               userModel.dtNascimento = widget.map['dtNascimento'];
 
               userModel.senha = controllerSenha.text.toLowerCase();
+              if (controllerSenha.text.isEmpty) userModel.senha = null;
 
               controllerNome.text.toLowerCase() != widget.map['nome'] && controllerNome.text.isNotEmpty ? userModel.nome = controllerNome.text.toLowerCase() : null;
               maskFormatterCel.getMaskedText() != widget.map['telefone'] && maskFormatterCel.getMaskedText().isNotEmpty ? userModel.telefone = maskFormatterCel.getMaskedText() : null;
@@ -159,7 +160,7 @@ class _UserEditDialogState extends State<UserEditDialog> {
 
               ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Carregando...'));
 
-              await userController.editUser(userModel);
+              await userController.editUser(userModel, widget.map['senha']);
 
               if (context.mounted) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
