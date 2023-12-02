@@ -26,7 +26,7 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
         DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h as 20:30h no Santuário', style: Theme.of(context).textTheme.bodyMedium)),
         DropdownMenuItem(value: 'Sabado 9:30h Santuario', child: Text('Sábado as 9:30h as 11:00h no Santuário', style: Theme.of(context).textTheme.bodyMedium)),
         DropdownMenuItem(value: 'Sabado 9:30h Jd Portugal', child: Text('Sábado as 9:30h as 11:00h no Jd Portugal', style: Theme.of(context).textTheme.bodyMedium)),
-        DropdownMenuItem(value: 'Sabado 9:30h Nossa Senhora Aparecida', child: Text('Sábado as 9:30h as 11:00h na Nossa Senhora Aparecida', style: Theme.of(context).textTheme.bodyMedium)),
+        DropdownMenuItem(value: 'Sabado 9:30h Centro Past. Pe. Wagner', child: Text('Sábado as 9:30h as 11:00h na Centro Past. Pe. Wagner', style: Theme.of(context).textTheme.bodyMedium)),
       ];
     }
 
@@ -38,7 +38,7 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
         DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h as 20:30h no Santuário', style: Theme.of(context).textTheme.bodyMedium)),
         DropdownMenuItem(value: 'Sabado 8h Santuario', child: Text('Sábado as 8h as 9:30h no Santuário', style: Theme.of(context).textTheme.bodyMedium)),
         DropdownMenuItem(value: 'Sabado 8h Jd Portugal', child: Text('Sábado as 8h as 9:30h no Jd Portugal', style: Theme.of(context).textTheme.bodyMedium)),
-        DropdownMenuItem(value: 'Sabado 8h Nossa Senhora Aparecida', child: Text('Sábado as 8h as 9:30h na Nossa Senhora Aparecida', style: Theme.of(context).textTheme.bodyMedium)),
+        DropdownMenuItem(value: 'Sabado 8h Centro Past. Pe. Wagner', child: Text('Sábado as 8h as 9:30h na Centro Past. Pe. Wagner', style: Theme.of(context).textTheme.bodyMedium)),
       ];
     }
 
@@ -50,7 +50,7 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
         DropdownMenuItem(value: 'Quinta 19h Santuario', child: Text('Quinta-feira as 19h as 20:30h no Santuário', style: Theme.of(context).textTheme.bodyMedium)),
         DropdownMenuItem(value: 'Sabado 8h Santuario', child: Text('Sábado as 8h as 9:30h no Santuário', style: Theme.of(context).textTheme.bodyMedium)),
         DropdownMenuItem(value: 'Sabado 8h Jd Portugal', child: Text('Sábado as 8h as 9:30h no Jd Portugal', style: Theme.of(context).textTheme.bodyMedium)),
-        DropdownMenuItem(value: 'Sabado 8h Nossa Senhora Aparecida', child: Text('Sábado as 8h as 9:30h na Nossa Senhora Aparecida', style: Theme.of(context).textTheme.bodyMedium)),
+        DropdownMenuItem(value: 'Sabado 8h Centro Past. Pe. Wagner', child: Text('Sábado as 8h as 9:30h na Centro Past. Pe. Wagner', style: Theme.of(context).textTheme.bodyMedium)),
       ];
     }
     return menuItems;
