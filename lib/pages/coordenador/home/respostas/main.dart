@@ -42,6 +42,7 @@ class _RepostasPageViewCoordState extends State<RepostasPageViewCoord> {
 
   @override
   Widget build(BuildContext context) {
+    inscricoes.sort((a, b) => b['dataInscricao'].compareTo(a['dataInscricao']));
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(

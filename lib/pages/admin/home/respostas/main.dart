@@ -41,6 +41,7 @@ class _RepostasPageViewState extends State<RepostasPageView> {
 
   @override
   Widget build(BuildContext context) {
+    inscricoes.sort((a, b) => b['dataInscricao'].compareTo(a['dataInscricao']));
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -60,6 +61,58 @@ class _RepostasPageViewState extends State<RepostasPageView> {
               ),
               const SizedBox(width: 10),
               InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Filtro'),
+                        content: Text('Escolha uma opção para filtrar.', style: Theme.of(context).textTheme.labelLarge),
+                        actionsAlignment: MainAxisAlignment.center,
+                        actions: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Eucaristia'), child: const Text('Eucaristia')),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Crisma'), child: const Text('Crisma')),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Jovens'), child: const Text('Jovens')),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Adultos'), child: const Text('Adultos')),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Limpar'), child: const Text('Limpar')),
+                          ),
+                        ],
+                      );
+                    },
+                  ).then(
+                    (value) => setState(
+                      () {
+                        if (value != 'Limpar') {
+                          inscricoes = duplicateItems.where((e) => e['etapa'].contains(value)).toList();
+                        } else {
+                          inscricoes = duplicateItems;
+                        }
+                      },
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(100, 74, 74, 74)),
+                  child: Image.asset('./assets/images/filter.png', width: 30),
+                ),
+              ),
+              const SizedBox(width: 10),
+              InkWell(
                 onTap: () async => await exportToExcel(inscricoes),
                 child: Container(
                   padding: const EdgeInsets.all(12),
@@ -71,11 +124,12 @@ class _RepostasPageViewState extends State<RepostasPageView> {
           ),
           if (isLoading) const Text('Carregando...'),
           criarListaInscricoes(
-              inscricoes,
-              () => setState(() {
-                    getInscricoes();
-                  }), 2,),
-              
+            inscricoes,
+            () => setState(() {
+              getInscricoes();
+            }),
+            2,
+          ),
         ],
       ),
     );

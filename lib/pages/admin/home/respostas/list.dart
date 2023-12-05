@@ -6,7 +6,7 @@ Widget criarListaInscricoes(List<Map<String, dynamic>>? inscricoes, Function() s
         shrinkWrap: true,
         itemCount: inscricoes!.length,
         itemBuilder: (context, index) {
-          return cardResposta(etapa: inscricoes[index], context: context, setstate: () => setstate(), accessLevel: accessLevel);
+          return cardResposta(inscricao: inscricoes[index], context: context, setstate: () => setstate(), accessLevel: accessLevel);
         },
       ),
     );

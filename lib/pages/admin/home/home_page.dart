@@ -110,6 +110,11 @@ class _HomePageState extends State<HomePage> {
       SideMenuItem(
         builder: (context, displayMode) {
           RespostasController controllerRespostas = RespostasController(RespostasRepository());
+          int totalEucaristia = 0;
+          int totalCrisma = 0;
+          int totalJovens = 0;
+          int totalAdultos = 0;
+
           return Padding(
             padding: const EdgeInsets.only(top: 15),
             child: FutureBuilder(
@@ -119,25 +124,86 @@ class _HomePageState extends State<HomePage> {
                   return const Center(child: Text('Carregando...'));
                 }
 
+                if (snapshot.data != null) {
+                  for (var element in snapshot.data!) {
+                    if (element['etapa'].contains('Eucaristia')) {
+                      totalEucaristia++;
+                    } else if (element['etapa'].contains('Crisma')) {
+                      totalCrisma++;
+                    } else if (element['etapa'].contains('Jovens')) {
+                      totalJovens++;
+                    } else if (element['etapa'].contains('Adultos')) {
+                      totalAdultos++;
+                    }
+                  }
+                }
+
                 if (displayMode == SideMenuDisplayMode.open) {
-                  return Center(
-                    child: CircularPercentIndicator(
-                      animation: true,
-                      radius: 60.0,
-                      lineWidth: 5.0,
-                      percent: 1.0,
-                      center: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('Inscrições'),
-                          Text('${snapshot.data?.length}'),
-                        ],
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LinearPercentIndicator(
+                        animation: true,
+                        percent: 1.0,
+                        progressColor: Colors.green,
+                        lineHeight: 8,
+                        width: 150,
+                        barRadius: const Radius.circular(5),
+                        trailing: Text('$totalEucaristia - Eucaristia'),
                       ),
-                      progressColor: Colors.green,
-                    ),
+                      const SizedBox(height: 10),
+                      LinearPercentIndicator(
+                        animation: true,
+                        percent: 1.0,
+                        progressColor: Colors.blue,
+                        lineHeight: 8,
+                        width: 150,
+                        barRadius: const Radius.circular(5),
+                        trailing: Text('$totalCrisma - Crisma'),
+                      ),
+                      const SizedBox(height: 10),
+                      LinearPercentIndicator(
+                        animation: true,
+                        percent: 1.0,
+                        progressColor: Colors.yellow,
+                        lineHeight: 8,
+                        width: 150,
+                        barRadius: const Radius.circular(5),
+                        trailing: Text('$totalJovens - Jovens'),
+                      ),
+                      const SizedBox(height: 10),
+                      LinearPercentIndicator(
+                        animation: true,
+                        percent: 1.0,
+                        progressColor: Colors.indigo,
+                        lineHeight: 8,
+                        width: 150,
+                        barRadius: const Radius.circular(5),
+                        trailing: Text('$totalAdultos - Adultos'),
+                      ),
+                      const SizedBox(height: 10),
+                      LinearPercentIndicator(
+                        animation: true,
+                        percent: 1.0,
+                        progressColor: Colors.deepOrange,
+                        lineHeight: 8,
+                        width: 150,
+                        barRadius: const Radius.circular(5),
+                        trailing: Text('${snapshot.data?.length} - Total'),
+                      ),
+                    ],
                   );
                 } else {
-                  return Center(child: Text('${snapshot.data?.length}'));
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('$totalEucaristia', style: const TextStyle(color: Colors.green)),
+                      Text('$totalCrisma', style: const TextStyle(color: Colors.blue)),
+                      Text('$totalJovens', style: const TextStyle(color: Colors.yellow)),
+                      Text('$totalAdultos', style: const TextStyle(color: Colors.indigo)),
+                      Text('${snapshot.data?.length}', style: const TextStyle(color: Colors.deepOrange)),
+                    ],
+                  );
                 }
               },
             ),

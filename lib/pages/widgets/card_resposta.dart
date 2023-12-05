@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:webapp/pages/widgets/dialog_delete.dart';
+import 'package:webapp/pages/widgets/dialog_view.dart';
 import 'package:webapp/pages/widgets/snackbar_custom.dart';
 
-Widget cardResposta({required Map etapa, required BuildContext context, required VoidCallback setstate, required int accessLevel}) {
-  String inputDtInscricao = etapa['dataInscricao'];
+Widget cardResposta({required Map<String, dynamic> inscricao, required BuildContext context, required VoidCallback setstate, required int accessLevel}) {
+  String inputDtInscricao = inscricao['dataInscricao'];
   DateTime dateTime = DateTime.parse(inputDtInscricao);
   String formattedDate = DateFormat('dd/MM/yyyy - HH:mm').format(dateTime);
 
@@ -17,42 +18,47 @@ Widget cardResposta({required Map etapa, required BuildContext context, required
         decoration: BoxDecoration(
           color: Colors.grey[200],
           border: Border(
-            left: BorderSide(width: 8.0, color: getColor(etapa['etapa'])),
+            left: BorderSide(width: 8.0, color: getColor(inscricao['etapa'])),
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(etapa['nome'], style: const TextStyle(fontSize: 18)),
-            Text('Local escolhido: ${etapa['local'] ?? 'A definir'}'),
+            Text(inscricao['nome'], style: const TextStyle(fontSize: 18)),
+            Text('Local escolhido: ${inscricao['local'] ?? 'A definir'}'),
             Text('Data da inscrição: $formattedDate'),
-            Text('Contato: ${etapa['telefone']}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
-            Text(etapa['etapa'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
-            if (accessLevel == 2)
-              Row(
-                children: [
-                  const Spacer(),
-                  // IconButton(
-                  //   onPressed: () {
-                  //     showDialog(
-                  //         context: context,
-                  //         builder: (context) {
-                  //           return editDialog(() {
-                  //             Navigator.pop(context);
-                  //             setstate();
-                  //           });
-                  //         }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('✅ Editado com sucesso!')));
-                  //   },
-                  //   icon: const Icon(Icons.edit, color: Colors.grey),
-                  // ),
-                  // const SizedBox(width: 5),
+            Text('Contato: ${inscricao['telefone'].substring(0, 2)} ${inscricao['telefone'].substring(2)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
+            Text(inscricao['etapa'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
+            Row(
+              children: [
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return viewDialog(
+                          inscricao,
+                          () {
+                            Navigator.pop(context);
+                            setstate();
+                          },
+                          context,
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.visibility, color: Colors.amber),
+                ),
+                const SizedBox(width: 5),
+                if (accessLevel == 2)
                   IconButton(
                     onPressed: () {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return deleteDialog(etapa['id'], () {
+                            return deleteDialog(inscricao['id'], () {
                               Navigator.pop(context);
                               setstate();
                             });
@@ -60,8 +66,8 @@ Widget cardResposta({required Map etapa, required BuildContext context, required
                     },
                     icon: const Icon(Icons.delete_forever, color: Colors.red),
                   ),
-                ],
-              )
+              ],
+            ),
           ],
         ),
       ),

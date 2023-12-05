@@ -41,6 +41,8 @@ class FormularioNomes extends StatelessWidget {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '⚠️ Este campo é obrigatório.';
+                    } else if (!value.contains(' ')) {
+                      return '⚠️ É importante colocar o nome completo.';
                     }
                     return null;
                   },
