@@ -4,6 +4,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
+import 'package:webapp/pages/coordenador/home/catequistas/main.dart';
 import 'package:webapp/pages/coordenador/home/respostas/main.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 
@@ -38,6 +39,13 @@ class _HomePageCoordState extends State<HomePageCoord> {
           sideMenu.changePage(index);
         },
         icon: const Icon(Icons.article),
+      ),
+      SideMenuItem(
+        title: 'Catequistas',
+        onTap: (index, _) {
+          sideMenu.changePage(index);
+        },
+        icon: const Icon(Icons.people),
       ),
       SideMenuItem(
         builder: (context, displayMode) {
@@ -134,6 +142,7 @@ class _HomePageCoordState extends State<HomePageCoord> {
               controller: pageController,
               children: [
                 RepostasPageViewCoord(etapa: widget.etapa),
+                CatequistasCoord(etapa: widget.etapa),
               ],
             ),
           ),

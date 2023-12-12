@@ -33,6 +33,16 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
             Row(
               children: [
                 const Spacer(),
+                PopupMenuButton(
+                  enabled: false,
+                  tooltip: 'Atribuir turma - Desabilitado',
+                  onSelected: (value) => handleClick(value),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem<String>(value: '1º Etapa', child: Text('1º Etapa', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400))),
+                    const PopupMenuItem<String>(value: '2º Etapa', child: Text('2º Etapa', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400))),
+                    const PopupMenuItem<String>(value: '3º Etapa', child: Text('3º Etapa', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400)))
+                  ],
+                ),
                 IconButton(
                   onPressed: () {
                     showDialog(
@@ -51,18 +61,20 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
                   },
                   icon: const Icon(Icons.visibility, color: Colors.amber),
                 ),
-                const SizedBox(width: 5),
                 if (accessLevel == 2)
                   IconButton(
                     onPressed: () {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return deleteDialog(inscricao['id'], () {
-                              Navigator.pop(context);
-                              setstate();
-                            });
-                          }).then((value) => ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!')));
+                            return deleteDialog(
+                                id: inscricao['id'],
+                                submit: () {
+                                  Navigator.pop(context, true);
+                                  setstate();
+                                },
+                                back: () => Navigator.pop(context, false));
+                          }).then((value) => value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')));
                     },
                     icon: const Icon(Icons.delete_forever, color: Colors.red),
                   ),
@@ -84,5 +96,22 @@ Color getColor(String etapa) {
     return Colors.yellow;
   } else {
     return Colors.indigo;
+  }
+}
+
+void handleClick(String item) {
+  switch (item) {
+    case '1º Etapa':
+      print(item);
+      break;
+    case '2º Etapa':
+      print(item);
+      break;
+    case '3º Etapa':
+      print(item);
+      break;
+    default:
+      print(item);
+      break;
   }
 }

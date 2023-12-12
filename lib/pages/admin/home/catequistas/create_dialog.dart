@@ -1,17 +1,29 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
 import 'package:webapp/controller/user_controller.dart';
 import 'package:webapp/data/user_repository.dart';
 import 'package:webapp/functions/validators/date_validator.dart';
 import 'package:webapp/model/user_model.dart';
+import 'package:webapp/pages/admin/home/catequistas/dropdown_catequista.dart';
 import 'package:webapp/pages/widgets/snackbar_custom.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 
 class DialogCreateCatequista extends StatefulWidget {
-  const DialogCreateCatequista({super.key, required this.submit, required this.back, required this.contextAlt});
+  const DialogCreateCatequista({
+    Key? key,
+    required this.submit,
+    required this.back,
+    required this.contextAlt,
+    this.isCoord = false,
+    this.etapaCoord,
+  }) : super(key: key);
   final VoidCallback submit;
   final VoidCallback back;
   final BuildContext contextAlt;
+  final bool? isCoord;
+  final String? etapaCoord;
 
   @override
   State<DialogCreateCatequista> createState() => _DialogCreateCatequistaState();
@@ -43,12 +55,16 @@ class _DialogCreateCatequistaState extends State<DialogCreateCatequista> {
   final UserController userController = UserController(UserRepository());
   UserModel userModel = UserModel();
 
+  ValueNotifier<String> retornoEtapa = ValueNotifier<String>('');
+
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   var maskFormatterDt = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
   var maskFormatterCel = MaskTextInputFormatter(mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isCoord!) accessLevel = 0;
+    if (widget.etapaCoord != null) coordEtapa = widget.etapaCoord;
     return AlertDialog(
       title: const Text('Editar a inscrição'),
       content: Form(
@@ -108,41 +124,7 @@ class _DialogCreateCatequistaState extends State<DialogCreateCatequista> {
                 return null;
               },
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text('Escolha um nível', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    ),
-                  ],
-                ),
-                DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      hintText: 'Selecione...',
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    validator: (value) => value == null ? "⚠️ É necessário escolher uma opção." : null,
-                    dropdownColor: Colors.grey[400],
-                    value: accessLevel,
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        accessLevel = newValue!;
-                      });
-                    },
-                    items: levelMenu),
-              ],
-            ),
-            if (accessLevel == 1)
+            if (!widget.isCoord!)
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -151,7 +133,42 @@ class _DialogCreateCatequistaState extends State<DialogCreateCatequista> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20),
-                        child: Text('Qual coordenação', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        child: Text('Escolha um nível', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                  DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        hintText: 'Selecione...',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      validator: (value) => value == null ? "⚠️ É necessário escolher uma opção." : null,
+                      dropdownColor: Colors.grey[400],
+                      value: accessLevel,
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          accessLevel = newValue!;
+                        });
+                      },
+                      items: levelMenu),
+                ],
+              ),
+            if (accessLevel != null)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text('Qual etapa', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                       ),
                     ],
                   ),
@@ -174,9 +191,14 @@ class _DialogCreateCatequistaState extends State<DialogCreateCatequista> {
                           coordEtapa = newValue!;
                         });
                       },
-                      items: etapaMenu),
+                      items: widget.etapaCoord != null
+                          ? [
+                              DropdownMenuItem(value: coordEtapa, child: Text(coordEtapa ?? '', style: const TextStyle(fontSize: 14))),
+                            ]
+                          : etapaMenu),
                 ],
               ),
+            if (coordEtapa != null && accessLevel == 0) DropdownCatequista(etapa: coordEtapa!, retornoEtapa: retornoEtapa),
           ],
         ),
       ),
@@ -191,6 +213,7 @@ class _DialogCreateCatequistaState extends State<DialogCreateCatequista> {
                 userModel.senha = controllerSenha.text.toLowerCase();
                 userModel.level = accessLevel;
                 userModel.etapaCoord = coordEtapa;
+                userModel.etapa = retornoEtapa.value;
 
                 ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Carregando...'));
 

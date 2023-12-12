@@ -12,13 +12,22 @@ class UserRepository {
     return retorno;
   }
 
-  Future<List<Map<String, dynamic>>> getUsers() async {
+  Future<List<Map<String, dynamic>>> getUsers({String? etapa}) async {
     List<Map<String, dynamic>> listaUsuarios = [];
-    var usuarios = await FirebaseFirestore.instance.collection('users').get();
-    for (var usuario in usuarios.docs) {
-      Map<String, dynamic> usuarioData = usuario.data();
-      usuarioData['id'] = usuario.id;
-      listaUsuarios.add(usuarioData);
+    if (etapa == null) {
+      var usuarios = await FirebaseFirestore.instance.collection('users').get();
+      for (var usuario in usuarios.docs) {
+        Map<String, dynamic> usuarioData = usuario.data();
+        usuarioData['id'] = usuario.id;
+        listaUsuarios.add(usuarioData);
+      }
+    } else {
+      var usuarios = await FirebaseFirestore.instance.collection('users').where('etapaCoord', isEqualTo: etapa).get();
+      for (var usuario in usuarios.docs) {
+        Map<String, dynamic> usuarioData = usuario.data();
+        usuarioData['id'] = usuario.id;
+        if (usuarioData['level'] == 0) listaUsuarios.add(usuarioData);
+      }
     }
     return listaUsuarios;
   }
@@ -34,7 +43,6 @@ class UserRepository {
   }
 
   Future<bool> deleteUsuario(String id) async => await FirebaseFirestore.instance.collection('users').doc(id).delete().then((value) => true).catchError((error) => false);
-
 }
 
 String _encryptPassword(String password) {

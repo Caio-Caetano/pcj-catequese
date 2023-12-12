@@ -15,6 +15,7 @@ Widget viewDialog(Map<String, dynamic> inscricao, VoidCallback back, BuildContex
           const Divider(),
           Text('Telefone: ${inscricao['telefone'].substring(0, 2)} ${inscricao['telefone'].substring(2)}', style: Theme.of(context).textTheme.labelLarge),
           Text('E-mail: ${inscricao['email']}', style: Theme.of(context).textTheme.labelLarge),
+          Text('Data de nascimento: ${inscricao['dataNascimento']}', style: Theme.of(context).textTheme.labelLarge),
           const Divider(),
           Text('Rua: ${inscricao['endereco']['rua']}', style: Theme.of(context).textTheme.labelLarge),
           Text('Número: ${inscricao['endereco']['numero']} - ${inscricao['endereco']['complemento']}', style: Theme.of(context).textTheme.labelLarge),
@@ -32,6 +33,8 @@ Widget viewDialog(Map<String, dynamic> inscricao, VoidCallback back, BuildContex
           const Divider(),
           Text('Etapa: ${inscricao['etapa']}', style: Theme.of(context).textTheme.labelLarge),
           Text('Catequista: ', style: Theme.of(context).textTheme.labelLarge),
+          const Divider(),
+          Text('Identificador: ${inscricao['id']}', style: Theme.of(context).textTheme.labelMedium)
         ],
       ),
     ),

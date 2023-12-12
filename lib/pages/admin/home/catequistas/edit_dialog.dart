@@ -3,13 +3,15 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:webapp/controller/user_controller.dart';
 import 'package:webapp/data/user_repository.dart';
 import 'package:webapp/model/user_model.dart';
+import 'package:webapp/pages/admin/home/catequistas/dropdown_catequista.dart';
 import 'package:webapp/pages/widgets/snackbar_custom.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 
 class UserEditDialog extends StatefulWidget {
-  const UserEditDialog({super.key, required this.back, required this.map});
+  const UserEditDialog({super.key, required this.back, required this.map, this.isCoord = false});
   final VoidCallback back;
   final Map<String, dynamic> map;
+  final bool? isCoord;
 
   @override
   State<UserEditDialog> createState() => _UserEditDialogState();
@@ -40,7 +42,10 @@ class _UserEditDialogState extends State<UserEditDialog> {
   final UserController userController = UserController(UserRepository());
   UserModel userModel = UserModel();
 
+  ValueNotifier<String> retornoEtapa = ValueNotifier<String>('');
+
   var maskFormatterCel = MaskTextInputFormatter(mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -69,40 +74,7 @@ class _UserEditDialogState extends State<UserEditDialog> {
             labelText: 'Senha',
             hintText: 'Crie uma senha de acesso',
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text('Escolha um nível', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  ),
-                ],
-              ),
-              DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Selecione...',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  dropdownColor: Colors.grey[400],
-                  value: accessLevel,
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      accessLevel = newValue!;
-                    });
-                  },
-                  items: levelMenu),
-            ],
-          ),
-          if (accessLevel == 1)
+          if (!widget.isCoord!)
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -111,7 +83,41 @@ class _UserEditDialogState extends State<UserEditDialog> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 20),
-                      child: Text('Qual coordenação', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      child: Text('Escolha um nível', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    ),
+                  ],
+                ),
+                DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Selecione...',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    dropdownColor: Colors.grey[400],
+                    value: accessLevel,
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        accessLevel = newValue!;
+                      });
+                    },
+                    items: levelMenu),
+              ],
+            ),
+          if (accessLevel != null)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text('Qual etapa', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     ),
                   ],
                 ),
@@ -136,6 +142,7 @@ class _UserEditDialogState extends State<UserEditDialog> {
                     items: etapaMenu),
               ],
             ),
+          if (coordEtapa != null && accessLevel == 0) DropdownCatequista(etapa: coordEtapa!, retornoEtapa: retornoEtapa),
         ],
       ),
       actions: [
@@ -148,6 +155,7 @@ class _UserEditDialogState extends State<UserEditDialog> {
               userModel.level = widget.map['level'];
               userModel.etapaCoord = widget.map['etapaCoord'];
               userModel.dtNascimento = widget.map['dtNascimento'];
+              userModel.etapa = widget.map['etapa'];
 
               userModel.senha = controllerSenha.text.toLowerCase();
               if (controllerSenha.text.isEmpty) userModel.senha = null;
@@ -157,6 +165,7 @@ class _UserEditDialogState extends State<UserEditDialog> {
               controllerUsuario.text.toLowerCase() != widget.map['username'] && controllerUsuario.text.isNotEmpty ? userModel.username = controllerUsuario.text.toLowerCase() : null;
               accessLevel != widget.map['level'] && accessLevel != null ? userModel.level = accessLevel : null;
               coordEtapa != widget.map['etapaCoord'] && coordEtapa != null ? userModel.etapaCoord = coordEtapa : null;
+              retornoEtapa != widget.map['etapaCoord'] && retornoEtapa.value.isNotEmpty ? userModel.etapa = retornoEtapa.value : null;
 
               ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Carregando...'));
 

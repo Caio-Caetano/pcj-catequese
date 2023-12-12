@@ -1,20 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class TextFieldCustom extends StatefulWidget {
   const TextFieldCustom({
-    super.key,
+    Key? key,
     required this.controller,
     this.formatter,
     this.validator,
+    this.onChanged,
     this.labelText,
     this.iconPrefix,
     this.hintText,
-    this.onChanged,
     this.readOnly = false,
-    this.labelColor,
     this.isPassword = false,
-  });
+    this.labelColor,
+    this.maxLines = 1,
+  }) : super(key: key);
 
   final TextEditingController controller;
   final List<MaskTextInputFormatter>? formatter;
@@ -29,6 +31,8 @@ class TextFieldCustom extends StatefulWidget {
   final bool? isPassword;
 
   final Color? labelColor;
+
+  final int? maxLines;
 
   @override
   State<TextFieldCustom> createState() => _TextFieldCustomState();
@@ -60,6 +64,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
           readOnly: widget.readOnly,
           obscureText: widget.isPassword! ? !isObscure : false,
           obscuringCharacter: '*',
+          maxLines: widget.maxLines,
           decoration: InputDecoration(
             prefixIcon: widget.iconPrefix,
             hintText: widget.hintText,

@@ -10,6 +10,7 @@ class UserModel {
   String? senha;
   int? level;
   String? etapaCoord;
+  String? etapa;
 
   UserModel({
     this.id,
@@ -20,6 +21,7 @@ class UserModel {
     this.senha = '',
     this.level = 0,
     this.etapaCoord = '',
+    this.etapa,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +34,7 @@ class UserModel {
       'senha': senha,
       'level': level,
       'etapaCoord': etapaCoord,
+      'etapa': etapa,
     };
   }
 
@@ -45,6 +48,7 @@ class UserModel {
       senha: map['senha'] != null ? map['senha'] as String : null,
       level: map['level'] != null ? map['level'] as int : null,
       etapaCoord: map['etapaCoord'] != null ? map['etapaCoord'] as String : null,
+      etapa: map['etapa'] != null ? map['etapa'] as String : null,
     );
   }
 

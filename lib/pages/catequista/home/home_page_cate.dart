@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/pages/admin/home/respostas/main.dart';
+import 'package:webapp/pages/catequista/home/respostas/main.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 
 class HomePageCatequista extends StatefulWidget {
@@ -77,43 +78,43 @@ class _HomePageCatequistaState extends State<HomePageCatequista> {
           }
         },
       ),
-      SideMenuItem(
-        builder: (context, displayMode) {
-          RespostasController controllerRespostas = RespostasController(RespostasRepository());
-          return Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: FutureBuilder(
-              future: controllerRespostas.getAllRespostas(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: Text('Carregando...'));
-                }
+      // SideMenuItem(
+      //   builder: (context, displayMode) {
+      //     RespostasController controllerRespostas = RespostasController(RespostasRepository());
+      //     return Padding(
+      //       padding: const EdgeInsets.only(top: 15),
+      //       child: FutureBuilder(
+      //         future: controllerRespostas.getAllRespostas(),
+      //         builder: (context, snapshot) {
+      //           if (snapshot.connectionState == ConnectionState.waiting) {
+      //             return const Center(child: Text('Carregando...'));
+      //           }
 
-                if (displayMode == SideMenuDisplayMode.open) {
-                  return Center(
-                    child: CircularPercentIndicator(
-                      animation: true,
-                      radius: 60.0,
-                      lineWidth: 5.0,
-                      percent: 1.0,
-                      center: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('Inscrições'),
-                          Text('${snapshot.data?.length}'),
-                        ],
-                      ),
-                      progressColor: Colors.green,
-                    ),
-                  );
-                } else {
-                  return Center(child: Text('${snapshot.data?.length}'));
-                }
-              },
-            ),
-          );
-        },
-      )
+      //           if (displayMode == SideMenuDisplayMode.open) {
+      //             return Center(
+      //               child: CircularPercentIndicator(
+      //                 animation: true,
+      //                 radius: 60.0,
+      //                 lineWidth: 5.0,
+      //                 percent: 1.0,
+      //                 center: Column(
+      //                   mainAxisSize: MainAxisSize.min,
+      //                   children: [
+      //                     const Text('Inscrições'),
+      //                     Text('${snapshot.data?.length}'),
+      //                   ],
+      //                 ),
+      //                 progressColor: Colors.green,
+      //               ),
+      //             );
+      //           } else {
+      //             return Center(child: Text('${snapshot.data?.length}'));
+      //           }
+      //         },
+      //       ),
+      //     );
+      //   },
+      // )
     ];
 
     return Scaffold(
@@ -133,7 +134,7 @@ class _HomePageCatequistaState extends State<HomePageCatequista> {
             child: PageView(
               controller: pageController,
               children: const [
-                RepostasPageView(),
+                RespostasPageViewCatequista(),
               ],
             ),
           ),

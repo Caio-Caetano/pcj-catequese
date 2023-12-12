@@ -7,7 +7,7 @@ class UserController {
 
   Future<String> createUser(UserModel model) async => await _userRepository.userAdd(model);
 
-  Future<List<Map<String, dynamic>>> getUsuarios() async => await _userRepository.getUsers();
+  Future<List<Map<String, dynamic>>> getUsuarios({String? etapa}) async => await _userRepository.getUsers(etapa: etapa);
 
   Future<void> editUser(UserModel model, String oldSenha) async => await _userRepository.editUsuario(model, oldSenha);
 

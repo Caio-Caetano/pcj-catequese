@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class RespostasRepository {
   Future<List<Map<String, dynamic>>> getAllInscricoes() async {
     List<Map<String, dynamic>> listaInscricoes = [];
+    //var inscricoes = await FirebaseFirestore.instance.collection('testes').get();
     var inscricoes = await FirebaseFirestore.instance.collection('inscricoes').get();
     for (var inscricao in inscricoes.docs) {
       Map<String, dynamic> inscricaoData = inscricao.data();
@@ -24,6 +25,7 @@ class RespostasRepository {
   }
 
   Future<bool> verificaInscricao(String nome, String telefone) async {
+    //var inscricao = await FirebaseFirestore.instance.collection('testes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
     var inscricao = await FirebaseFirestore.instance.collection('inscricoes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
     if (inscricao.docs.isEmpty) {
       return true;
@@ -31,5 +33,6 @@ class RespostasRepository {
     return false;
   }
 
+  //Future<bool> deletarInscricao(String id) async => await FirebaseFirestore.instance.collection('testes').doc(id).delete().then((value) => true).catchError((error) => false);
   Future<bool> deletarInscricao(String id) async => await FirebaseFirestore.instance.collection('inscricoes').doc(id).delete().then((value) => true).catchError((error) => false);
 }

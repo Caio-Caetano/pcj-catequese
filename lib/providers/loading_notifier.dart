@@ -10,7 +10,7 @@ class LoadingClass extends ChangeNotifier {
   get loading => _loading;
 
   setLoading() {
-    _loading =  !_loading;
+    _loading = !_loading;
     notifyListeners();
   }
 
@@ -22,6 +22,7 @@ class LoadingClass extends ChangeNotifier {
     var response = await controllerRespostas.verificaInscricao(model.nome!, model.telefone!);
     if (response) {
       CollectionReference inscricoes = FirebaseFirestore.instance.collection('inscricoes');
+      //CollectionReference inscricoes = FirebaseFirestore.instance.collection('testes');
       return await inscricoes.add(model.toMap()).then((value) {
         _loading = false;
         notifyListeners();

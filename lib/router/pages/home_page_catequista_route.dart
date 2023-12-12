@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:webapp/pages/admin/home/home_page.dart';
+import 'package:webapp/pages/catequista/home/home_page_cate.dart';
 
 class HomePageRouteCatequista extends Page {
   final VoidCallback onLogout;
@@ -10,7 +10,7 @@ class HomePageRouteCatequista extends Page {
     return MaterialPageRoute(
       settings: this,
       builder: (BuildContext context) {
-        return HomePage(onLogout: onLogout);
+        return HomePageCatequista(onLogout: onLogout);
       },
     );
   }

@@ -3,7 +3,6 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:webapp/controller/config_controller.dart';
 import 'package:webapp/pages/login/popup_login.dart';
 
-
 class LoginPage extends StatelessWidget {
   final Function(int) onLogin;
   final VoidCallback onRegisterClick;
@@ -46,7 +45,7 @@ class LoginPage extends StatelessWidget {
           future: configController.getFormAberto(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              bool open = snapshot.data ?? false;
+              bool open = snapshot.data!['formOpen'] ?? false;
               return Column(
                 children: [
                   const SizedBox(height: 20),
@@ -61,7 +60,7 @@ class LoginPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text('Aviso!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                        open ? const Text('O formulário está aberto e com vagas limitadas.') : const Text('O formulário para inscrição será liberado a partir do dia 01/12, e com vagas limitadas.'),
+                        Text('${snapshot.data!['avisoFechado']}'),
                       ],
                     ),
                   ),
