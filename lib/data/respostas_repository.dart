@@ -17,8 +17,10 @@ class RespostasRepository {
     List<Map<String, dynamic>> listaInscricoes = [];
     var inscricoes = await getAllInscricoes();
     for (var e in inscricoes) {
-      if (e['etapa'].contains(etapa)) {
-        listaInscricoes.add(e);
+      if (e['etapa'] != null) {
+        if (e['etapa'].contains(etapa)) {
+          listaInscricoes.add(e);
+        }
       }
     }
     return listaInscricoes;

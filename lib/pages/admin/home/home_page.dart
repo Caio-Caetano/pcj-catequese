@@ -6,7 +6,9 @@ import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/pages/admin/home/catequistas/main_admin.dart';
 import 'package:webapp/pages/admin/home/configuracoes/main.dart';
+import 'package:webapp/pages/admin/home/horarios/main.dart';
 import 'package:webapp/pages/admin/home/respostas/main.dart';
+import 'package:webapp/pages/admin/home/turmas/main.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         icon: const Icon(Icons.article),
       ),
       SideMenuItem(
-        title: 'Etapas',
+        title: 'Turmas',
         onTap: (index, _) {
           sideMenu.changePage(index);
         },
@@ -54,6 +56,13 @@ class _HomePageState extends State<HomePage> {
           sideMenu.changePage(index);
         },
         icon: const Icon(Icons.people),
+      ),
+      SideMenuItem(
+        title: 'Horários e Locais',
+        onTap: (index, _) {
+          sideMenu.changePage(index);
+        },
+        icon: const Icon(Icons.timelapse),
       ),
       SideMenuItem(
         title: 'Avisos',
@@ -230,10 +239,9 @@ class _HomePageState extends State<HomePage> {
               controller: pageController,
               children: const [
                 RepostasPageView(),
-                Center(
-                  child: Text('Etapas', style: TextStyle(color: Colors.black)),
-                ),
+                TurmasPageView(),
                 CatequistasMainAdmin(),
+                HorariosLocaisPageView(),
                 Center(
                   child: Text('Avisos', style: TextStyle(color: Colors.black)),
                 ),

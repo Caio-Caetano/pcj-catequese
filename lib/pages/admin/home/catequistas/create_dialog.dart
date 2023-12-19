@@ -46,7 +46,7 @@ class _DialogCreateCatequistaState extends State<DialogCreateCatequista> {
   String? coordEtapa;
 
   List<DropdownMenuItem<String>> etapaMenu = const [
-    DropdownMenuItem(value: 'Eucaristia', child: Text('Eucarista', style: TextStyle(fontSize: 14))),
+    DropdownMenuItem(value: 'Eucaristia', child: Text('Eucaristia', style: TextStyle(fontSize: 14))),
     DropdownMenuItem(value: 'Crisma', child: Text('Crisma', style: TextStyle(fontSize: 14))),
     DropdownMenuItem(value: 'Jovens', child: Text('Jovens', style: TextStyle(fontSize: 14))),
     DropdownMenuItem(value: 'Adultos', child: Text('Adultos', style: TextStyle(fontSize: 14))),

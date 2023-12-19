@@ -10,39 +10,45 @@ class PopUpMensagemFechado extends StatelessWidget {
     final TextEditingController mensagemController = TextEditingController();
     final GlobalKey<FormState> keyForm = GlobalKey<FormState>();
     final ConfigController configController = ConfigController();
-    return AlertDialog(
-      title: const Text('Editar mensagem'),
-      content: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Form(
-          key: keyForm,
-          child: SizedBox(
-            width: 200,
-            child: TextFieldCustom(
-              controller: mensagemController,
-              maxLines: 8,
-              labelText: 'Nova mensagem',
-              validator: (value) => value == null || value.isEmpty ? '⚠️ Campo obrigatório' : null,
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        ElevatedButton(
-          onPressed: () async {
-            if (keyForm.currentState!.validate()) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                behavior: SnackBarBehavior.floating,
-                elevation: 8,
-                content: Text('Carregando...'),
-              ));
-              await configController.updateMensagemFechado(mensagemController.text.trim()).then((value) => Navigator.pop(context));
-            }
-          },
-          style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.red)),
-          child: const Text('Editar', style: TextStyle(color: Colors.white)),
-        )
-      ],
+    return FutureBuilder(
+      future: configController.getFormAberto(),
+      builder: (context, snapshot) => snapshot.connectionState == ConnectionState.done
+          ? AlertDialog(
+              title: const Text('Editar mensagem'),
+              content: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Form(
+                  key: keyForm,
+                  child: SizedBox(
+                    width: 200,
+                    child: TextFieldCustom(
+                      controller: mensagemController,
+                      maxLines: 8,
+                      hintText: snapshot.data!['avisoFechado'],
+                      labelText: 'Nova mensagem',
+                      validator: (value) => value == null || value.isEmpty ? '⚠️ Campo obrigatório' : null,
+                    ),
+                  ),
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () async {
+                    if (keyForm.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        elevation: 8,
+                        content: Text('Carregando...'),
+                      ));
+                      await configController.updateMensagemFechado(mensagemController.text.trim()).then((value) => Navigator.pop(context));
+                    }
+                  },
+                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.red)),
+                  child: const Text('Editar', style: TextStyle(color: Colors.white)),
+                )
+              ],
+            )
+          : const Text('Carregando...'),
     );
   }
 }
