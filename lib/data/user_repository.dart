@@ -12,7 +12,7 @@ class UserRepository {
     return retorno;
   }
 
-  Future<List<Map<String, dynamic>>> getUsers({String? etapa}) async {
+  Future<List<Map<String, dynamic>>> getUsers({String? etapa, bool? withCoord}) async {
     List<Map<String, dynamic>> listaUsuarios = [];
     if (etapa == null) {
       var usuarios = await FirebaseFirestore.instance.collection('users').get();
@@ -26,7 +26,7 @@ class UserRepository {
       for (var usuario in usuarios.docs) {
         Map<String, dynamic> usuarioData = usuario.data();
         usuarioData['id'] = usuario.id;
-        if (usuarioData['level'] == 0) listaUsuarios.add(usuarioData);
+        if (usuarioData['level'] == 0 || (withCoord != null && withCoord)) listaUsuarios.add(usuarioData);
       }
     }
     return listaUsuarios;

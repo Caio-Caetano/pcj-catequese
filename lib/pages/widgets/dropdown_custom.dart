@@ -6,7 +6,9 @@ class DropdownButtonCustom extends StatefulWidget {
     this.onChanged,
     this.hintText = 'Selecione...',
     this.value,
-    this.items, this.label,
+    this.items,
+    this.label,
+    this.validator,
   });
 
   final Function(String?)? onChanged;
@@ -14,6 +16,7 @@ class DropdownButtonCustom extends StatefulWidget {
   final String? value;
   final List<DropdownMenuItem<String>>? items;
   final String? label;
+  final String? Function(String?)? validator;
 
   @override
   State<DropdownButtonCustom> createState() => _DropdownButtonCustomState();
@@ -41,6 +44,7 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
           value: widget.value,
           onChanged: widget.onChanged,
           items: widget.items,
+          validator: widget.validator,
         ),
       ],
     );

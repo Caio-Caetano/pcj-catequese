@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webapp/pages/login/login_page.dart';
 
 class LoginPageRoute extends Page {
-  final Function(int) onLogin;
+  final Function(int,String?,String?) onLogin;
   final VoidCallback onRegisterClick;
   const LoginPageRoute({required this.onRegisterClick, required this.onLogin}) : super(key: const ValueKey('LoginPage'));
 

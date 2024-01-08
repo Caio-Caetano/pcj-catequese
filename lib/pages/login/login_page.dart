@@ -4,7 +4,7 @@ import 'package:webapp/controller/config_controller.dart';
 import 'package:webapp/pages/login/popup_login.dart';
 
 class LoginPage extends StatelessWidget {
-  final Function(int) onLogin;
+  final Function(int,String?,String?) onLogin;
   final VoidCallback onRegisterClick;
   const LoginPage({super.key, required this.onRegisterClick, required this.onLogin});
 

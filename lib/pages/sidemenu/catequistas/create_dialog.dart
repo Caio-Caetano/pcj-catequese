@@ -6,7 +6,7 @@ import 'package:webapp/controller/user_controller.dart';
 import 'package:webapp/data/user_repository.dart';
 import 'package:webapp/functions/validators/date_validator.dart';
 import 'package:webapp/model/user_model.dart';
-import 'package:webapp/pages/admin/home/catequistas/dropdown_catequista.dart';
+import 'package:webapp/pages/sidemenu/catequistas/dropdown_catequista.dart';
 import 'package:webapp/pages/widgets/snackbar_custom.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 
@@ -198,7 +198,7 @@ class _DialogCreateCatequistaState extends State<DialogCreateCatequista> {
                           : etapaMenu),
                 ],
               ),
-            if (coordEtapa != null && accessLevel == 0) DropdownCatequista(etapa: coordEtapa!, retornoEtapa: retornoEtapa),
+            if (coordEtapa != null) DropdownCatequista(etapa: coordEtapa!, retornoEtapa: retornoEtapa),
           ],
         ),
       ),

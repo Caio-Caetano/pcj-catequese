@@ -5,7 +5,7 @@ import 'package:webapp/pages/widgets/text_field_custom.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 
 class PopUpLogin extends StatelessWidget {
-  final Function(int) onLogin;
+  final Function(int, String?, String?) onLogin;
   const PopUpLogin({super.key, required this.onLogin});
 
   @override
@@ -58,7 +58,7 @@ class PopUpLogin extends StatelessWidget {
                       senha: passwordController.text.trim(),
                     ));
                     if (result != null) {
-                      onLogin(result.level ?? 0);
+                      onLogin(result.level ?? 0, result.nome, '${result.etapa} - ${result.etapaCoord}');
                     } else {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

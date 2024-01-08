@@ -35,10 +35,16 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   bool? get loggedIn => _loggedIn;
   set loggedIn(value) {
     if (_loggedIn == true && value == false) {
-      // It is a logout!
       _clear();
     }
     _loggedIn = value;
+    notifyListeners();
+  }
+
+  int? _accessLevel;
+  int? get accessLevel => _accessLevel;
+  set accessLevel(value) {
+    _accessLevel = value;
     notifyListeners();
   }
 
@@ -132,10 +138,24 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
     notifyListeners();
   }
 
-  int? _accessLevel;
-  int? get accessLevel => _accessLevel;
-  set accessLevel(value) {
-    _accessLevel = value;
+  String? _etapa;
+  String? get etapa => _etapa;
+  set etapa(value) {
+    _etapa = value;
+    notifyListeners();
+  }
+
+  String? _etapaa;
+  String? get etapaa => _etapaa;
+  set etapaa(value) {
+    _etapaa = value;
+    notifyListeners();
+  }
+
+  String? _nomeCatequista;
+  String? get nomeCatequista => _nomeCatequista;
+  set nomeCatequista(value) {
+    _nomeCatequista = value;
     notifyListeners();
   }
 
@@ -150,10 +170,12 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
     final ConfigController configController = ConfigController();
     loggedIn = await authRepository.isUserLoggedIn();
     configuracoes = await configController.getFormAberto();
-    if (loggedIn == true) {
-      accessLevel = await authRepository.getAccessLevel();
-      etapaCoord = await authRepository.getEtapa();
-    }
+    accessLevel = await authRepository.getAccessLevel();
+    etapaCoord = await authRepository.getEtapaCoord();
+    etapa = await authRepository.getEtapa();
+    nomeCatequista = await authRepository.getNomeCatequista();
+
+    etapaa = '$etapa - $etapaCoord';
   }
 
   @override
@@ -177,9 +199,11 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   Widget build(BuildContext context) {
     List<Page> stack;
     final loggedIn = this.loggedIn;
+    final accessLevel = this.accessLevel;
+    final etapaCoord = this.etapaCoord;
     if (show404 == true) {
       stack = _unknownStack;
-    } else if (loggedIn == null || configuracoes == null) {
+    } else if (loggedIn == null || configuracoes == null || accessLevel == null || etapaCoord == null || nomeCatequista == null) {
       stack = _splashStack;
     } else if (loggedIn) {
       if (accessLevel == 2) {
@@ -292,9 +316,13 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
           onRegisterClick: () {
             registerPage = true;
           },
-          onLogin: (int al) {
+          onLogin: (int al, String? nome, String? etapa) async {
             accessLevel = al;
+            nomeCatequista = nome;
+            etapaa = etapa;
+            etapaCoord = etapa!.split('-')[1].trim();
             loggedIn = true;
+            await _init();
           },
         ),
       ];
@@ -307,13 +335,13 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
 
   List<Page> get _loggedInStackCoord {
     return [
-      HomePageRouteCoord(onLogout: () => loggedIn = false, etapa: etapaCoord),
+      HomePageRouteCoord(onLogout: () => loggedIn = false, etapa: etapaCoord, nomeCatequista: nomeCatequista),
     ];
   }
 
   List<Page> get _loggedInStackCatequista {
     return [
-      HomePageRouteCatequista(onLogout: () => loggedIn = false),
+      HomePageRouteCatequista(onLogout: () => loggedIn = false, etapa: etapaa, catequista: nomeCatequista),
     ];
   }
 

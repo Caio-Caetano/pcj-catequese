@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:webapp/controller/respostas_controller.dart';
-import 'package:webapp/controller/turma_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
-import 'package:webapp/data/turma_repository.dart';
-import 'package:webapp/model/turma_model.dart';
 import 'package:webapp/pages/widgets/dialog_archive_inscricao.dart';
 import 'package:webapp/pages/widgets/dialog_delete.dart';
 import 'package:webapp/pages/widgets/dialog_view.dart';
 import 'package:webapp/pages/widgets/snackbar_custom.dart';
 
-Widget cardResposta({required Map<String, dynamic> inscricao, required BuildContext context, required VoidCallback setstate, required int accessLevel}) {
-  final String inputDtInscricao = inscricao['dataInscricao'];
-  final DateTime dateTime = DateTime.parse(inputDtInscricao);
-  final String formattedDate = DateFormat('dd/MM/yyyy - HH:mm').format(dateTime);
-  final TurmaController turmaController = TurmaController(TurmaRepository());
+Widget cardArchived({required Map<String, dynamic> inscricao, required BuildContext context, required VoidCallback setstate, required int accessLevel}) {
   final RespostasController controller = RespostasController(RespostasRepository());
 
   return Padding(
@@ -34,27 +26,11 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(inscricao['nome'], style: const TextStyle(fontSize: 18)),
-            Text('Local escolhido: ${inscricao['local'] ?? 'A definir'}'),
-            Text('Data da inscrição: $formattedDate'),
-            Text('Contato: ${inscricao['telefone'].substring(0, 2)} ${inscricao['telefone'].substring(2)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
-            Text(inscricao['etapa'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
-            Text('Catequistas atribuídos: ${inscricao['turma'] == null ? 'Não' : inscricao['turma']['catequistas']}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
+            const Text('Motivo que está arquivado:', style: TextStyle(fontSize: 18)),
+            for (var reason in inscricao['archived']['reasons']) Text(reason, style: Theme.of(context).textTheme.labelMedium),
             Row(
               children: [
                 const Spacer(),
-                FutureBuilder(
-                    future: turmaController.getTurmas(etapa: inscricao['etapa']),
-                    builder: (context, snapshot) {
-                      return PopupMenuButton(
-                          enabled: !(snapshot.connectionState == ConnectionState.waiting),
-                          tooltip: snapshot.connectionState == ConnectionState.waiting ? 'Carregando' : 'Atribuir turma',
-                          onSelected: (value) => handleClick(value, inscricao['id'], setstate),
-                          itemBuilder: (context) {
-                            return snapshot.connectionState == ConnectionState.waiting
-                                ? [PopupMenuItem<TurmaModel>(value: TurmaModel(), child: Text('Nulo', style: Theme.of(context).textTheme.labelSmall))]
-                                : snapshot.data!.map((e) => PopupMenuItem<TurmaModel>(value: e, child: Text('${e.catequistas![0]} | ${e.local}', style: Theme.of(context).textTheme.labelSmall))).toList();
-                          });
-                    }),
                 IconButton(
                   onPressed: () {
                     showDialog(
@@ -81,6 +57,7 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
                           builder: (context) {
                             return DialogArchiveInscricao(
                               nome: inscricao['nome'],
+                              archiving: false,
                               onSubmit: (reason) async {
                                 await controller.archiveInscricao(inscricao['id'], reason, inscricao['archived'] == null ? false : inscricao['archived']['isNowArchived']).then((value) {
                                   Navigator.pop(context, value);
@@ -88,9 +65,9 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
                                 });
                               },
                             );
-                          }).then((value) => value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('📁 Arquivado com sucesso.')));
+                          }).then((value) => value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('📁 Restaurado com sucesso.')));
                     },
-                    icon: const Icon(Icons.archive, color: Colors.blueGrey),
+                    icon: const Icon(Icons.unarchive, color: Colors.blueGrey),
                   ),
                 if (accessLevel == 2)
                   IconButton(
@@ -127,13 +104,5 @@ Color getColor(String etapa) {
     return Colors.yellow;
   } else {
     return Colors.indigo;
-  }
-}
-
-void handleClick(TurmaModel turma, String id, VoidCallback setState) async {
-  RespostasController respostasController = RespostasController(RespostasRepository());
-  var result = await respostasController.updateInscricaoTurma(id, turma);
-  if (result) {
-    setState();
   }
 }

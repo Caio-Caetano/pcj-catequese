@@ -32,7 +32,7 @@ Widget viewDialog(Map<String, dynamic> inscricao, VoidCallback back, BuildContex
             Text('Não possui 1º eucaristia', style: Theme.of(context).textTheme.labelLarge),
           const Divider(),
           Text('Etapa: ${inscricao['etapa']}', style: Theme.of(context).textTheme.labelLarge),
-          Text('Catequista: ', style: Theme.of(context).textTheme.labelLarge),
+          Text('Catequista: ${inscricao['turma'] == null ? 'Não definido' : inscricao['turma']['catequistas']}', style: Theme.of(context).textTheme.labelLarge),
           const Divider(),
           Text('Identificador: ${inscricao['id']}', style: Theme.of(context).textTheme.labelMedium)
         ],

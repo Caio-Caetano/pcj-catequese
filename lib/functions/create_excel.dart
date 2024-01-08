@@ -57,3 +57,39 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
   // Salve o arquivo
   excel.save(fileName: 'exported.xlsx');
 }
+
+Future<void> exportListaPresenca(List<String> data, String mes) async {
+  var excel = Excel.createExcel();
+  excel.rename('Sheet1', '${DateTime.now().year}_$mes');
+  var sheet = excel['${DateTime.now().year}_$mes'];
+
+  // Adiciona os Header
+  sheet.merge(CellIndex.indexByString('B1'), CellIndex.indexByString('F1'), customValue: mes);
+
+  // Adiciona leganda DATA
+  sheet.cell(CellIndex.indexByString('A2')).value = 'Data';
+
+  // Adicione NOMES
+  var indexRow = 2;
+  for (var singleData in data) {
+    sheet.cell(CellIndex.indexByColumnRow(rowIndex: indexRow, columnIndex: 0)).value = singleData;
+    indexRow++;
+  }
+
+  CellStyle headerStyle = CellStyle(
+    horizontalAlign: HorizontalAlign.Center,
+    verticalAlign: VerticalAlign.Center,
+    bold: true,
+    rightBorder: Border(borderStyle: BorderStyle.Thin, borderColorHex: '#000000'),
+    leftBorder: Border(borderStyle: BorderStyle.Thin, borderColorHex: '#000000'),
+    topBorder: Border(borderStyle: BorderStyle.Thin, borderColorHex: '#000000'),
+    bottomBorder: Border(borderStyle: BorderStyle.Thin, borderColorHex: '#000000'),
+  );
+
+  for (var i = 1; i <= 5; i++) {
+    sheet.cell(CellIndex.indexByColumnRow(rowIndex: 0, columnIndex: i)).cellStyle = headerStyle;
+  }
+
+  // Salve o arquivo
+  excel.save(fileName: 'lista_presenca_${DateTime.now().year}.xlsx');
+}
