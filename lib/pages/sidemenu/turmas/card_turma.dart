@@ -52,7 +52,7 @@ class _CardTurmaState extends State<CardTurma> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Center(child: Text('${widget.model.etapa} | ${widget.model.local!.split('no').last.trim()}')),
-                          Text('Catequista: ${widget.model.catequistas![0] ?? ''}', style: Theme.of(context).textTheme.labelSmall),
+                          Text('Catequista: ${widget.model.catequistas!.isEmpty ? 'Sem catequista atribuído' : widget.model.catequistas![0]}', style: Theme.of(context).textTheme.labelSmall),
                           Text('Local: ${widget.model.local ?? ''}', style: Theme.of(context).textTheme.labelSmall),
                           Text('Tamanho da turma: ${snapshot.data!.length}', style: Theme.of(context).textTheme.labelSmall),
                         ],

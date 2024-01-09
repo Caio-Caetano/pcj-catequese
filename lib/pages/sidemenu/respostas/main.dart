@@ -8,7 +8,8 @@ import 'package:webapp/pages/widgets/text_field_custom.dart';
 
 class RepostasPageView extends StatefulWidget {
   final String? etapa;
-  const RepostasPageView({super.key, this.etapa});
+  final int accessLevel;
+  const RepostasPageView({super.key, this.etapa, required this.accessLevel});
 
   @override
   State<RepostasPageView> createState() => _RepostasPageViewState();
@@ -21,8 +22,6 @@ class _RepostasPageViewState extends State<RepostasPageView> {
   List<Map<String, dynamic>> inscricoes = [];
   List<Map<String, dynamic>> duplicateItems = [];
   bool isLoading = true;
-
-  
 
   String? localFiltro;
   List<String> locaisUnicos = [];
@@ -228,17 +227,17 @@ class _RepostasPageViewState extends State<RepostasPageView> {
                           if (value['turma'] != null) {
                             if (inscricoes.isNotEmpty) {
                               if (value['turma'] == 'Sim') {
-                                inscricoes = inscricoes.where((e) => e['turma'] != null).toList();
+                                inscricoes = inscricoes.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
                               } else if (value['turma'] == 'Não') {
-                                inscricoes = inscricoes.where((e) => e['turma'] == null).toList();
+                                inscricoes = inscricoes.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
                               } else {
                                 inscricoes = inscricoes;
                               }
                             } else {
                               if (value['turma'] == 'Sim') {
-                                inscricoes = duplicateItems.where((e) => e['turma'] != null).toList();
+                                inscricoes = duplicateItems.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
                               } else if (value['turma'] == 'Não') {
-                                inscricoes = duplicateItems.where((e) => e['turma'] == null).toList();
+                                inscricoes = duplicateItems.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
                               } else {
                                 inscricoes = duplicateItems;
                               }
@@ -282,7 +281,7 @@ class _RepostasPageViewState extends State<RepostasPageView> {
                 },
               ),
             ),
-            2,
+            widget.accessLevel,
           ),
         ],
       ),

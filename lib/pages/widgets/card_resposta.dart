@@ -38,7 +38,7 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
             Text('Data da inscrição: $formattedDate'),
             Text('Contato: ${inscricao['telefone'].substring(0, 2)} ${inscricao['telefone'].substring(2)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
             Text(inscricao['etapa'], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
-            Text('Catequistas atribuídos: ${inscricao['turma'] == null ? 'Não' : inscricao['turma']['catequistas']}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
+            Text('Catequistas atribuídos: ${inscricao['turma'] == null ? 'Não atribuído' : inscricao['turma']['catequistas']}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w200)),
             Row(
               children: [
                 const Spacer(),
@@ -52,7 +52,7 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
                           itemBuilder: (context) {
                             return snapshot.connectionState == ConnectionState.waiting
                                 ? [PopupMenuItem<TurmaModel>(value: TurmaModel(), child: Text('Nulo', style: Theme.of(context).textTheme.labelSmall))]
-                                : snapshot.data!.map((e) => PopupMenuItem<TurmaModel>(value: e, child: Text('${e.catequistas![0]} | ${e.local}', style: Theme.of(context).textTheme.labelSmall))).toList();
+                                : snapshot.data!.where((e) => e.catequistas!.isNotEmpty).map((e) => PopupMenuItem<TurmaModel>(value: e, child: Text('${e.catequistas![0]} | ${e.local}', style: Theme.of(context).textTheme.labelSmall))).toList();
                           });
                     }),
                 IconButton(

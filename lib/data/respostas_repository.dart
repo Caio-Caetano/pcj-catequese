@@ -2,13 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:webapp/model/turma_model.dart';
 
 class RespostasRepository {
+  var fireInstance = FirebaseFirestore.instance;
+
   Future<List<Map<String, dynamic>>> _getAllInscricoes() async {
     List<Map<String, dynamic>> listaInscricoes = [];
-    //var inscricoes = await FirebaseFirestore.instance.collection('testes').get();
-    var inscricoes = await FirebaseFirestore.instance.collection('inscricoes').get();
+    // var inscricoes = await fireInstance.collection('testes').get();
+    var inscricoes = await fireInstance.collection('inscricoes').get();
     for (var inscricao in inscricoes.docs) {
       Map<String, dynamic> inscricaoData = inscricao.data();
       inscricaoData['id'] = inscricao.id;
+      DocumentReference? teste = inscricaoData['turma'];
+      var i = await teste?.get();
+      inscricaoData['turma'] = i?.data();
+
+      if (inscricaoData['turma']?['catequistas'].isEmpty ?? false) {
+        var docRef = fireInstance.collection('turmas').doc(i?.id);
+        var result = await fireInstance.collection('inscricoes').where('turma', isEqualTo: docRef).get();
+        for (var r in result.docs) {
+          await fireInstance.collection('inscricoes').doc(r.id).update({'turma': null});
+        }
+      }
+
       listaInscricoes.add(inscricaoData);
     }
     return listaInscricoes;
@@ -51,23 +65,29 @@ class RespostasRepository {
   }
 
   Future<bool> verificaInscricao(String nome, String telefone) async {
-    //var inscricao = await FirebaseFirestore.instance.collection('testes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
-    var inscricao = await FirebaseFirestore.instance.collection('inscricoes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
+    // var inscricao = await fireInstance.collection('testes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
+    var inscricao = await fireInstance.collection('inscricoes').where('nome', isEqualTo: nome).where('telefone', isEqualTo: telefone).get();
     if (inscricao.docs.isEmpty) {
       return true;
     }
     return false;
   }
 
-  //Future<bool> deletarInscricao(String id) async => await FirebaseFirestore.instance.collection('testes').doc(id).delete().then((value) => true).catchError((error) => false);
-  Future<bool> deletarInscricao(String id) async => await FirebaseFirestore.instance.collection('inscricoes').doc(id).delete().then((value) => true).catchError((error) => false);
+  // Future<bool> deletarInscricao(String id) async => await fireInstance.collection('testes').doc(id).delete().then((value) => true).catchError((error) => false);
+  Future<bool> deletarInscricao(String id) async => await fireInstance.collection('inscricoes').doc(id).delete().then((value) => true).catchError((error) => false);
 
-  //Future<bool> updateInscricaoTurma(String id, TurmaModel turma) async => await FirebaseFirestore.instance.collection('testes').doc(id).update({'turma': turma.toMap()}).then((value) => true).catchError((error) => false);
-  Future<bool> updateInscricaoTurma(String id, TurmaModel turma) async => await FirebaseFirestore.instance.collection('inscricoes').doc(id).update({'turma': turma.toMap()}).then((value) => true).catchError((error) => false);
+  // Future<bool> updateInscricaoTurma(String id, TurmaModel turma) async {
+  //   DocumentReference ref = fireInstance.collection('turmas').doc(turma.id);
+  //   return await fireInstance.collection('testes').doc(id).update({'turma': ref}).then((value) => true).catchError((error) => false);
+  // }
+  Future<bool> updateInscricaoTurma(String id, TurmaModel turma) async {
+    DocumentReference ref = fireInstance.collection('turmas').doc(turma.id);
+    return await fireInstance.collection('inscricoes').doc(id).update({'turma': ref}).then((value) => true).catchError((error) => false);
+  }
 
   // Future<bool> archiveInscricao(String id, String reason, bool? isArchived) async {
   //   bool archived = isArchived ?? false;
-  //   return await FirebaseFirestore.instance
+  //   return await fireInstance
   //       .collection('testes')
   //       .doc(id)
   //       .update({
@@ -82,23 +102,24 @@ class RespostasRepository {
   // }
   Future<bool> archiveInscricao(String id, String reason, bool? isArchived) async {
     bool archived = isArchived ?? false;
-    return await FirebaseFirestore.instance
-      .collection('inscricoes')
-      .doc(id)
-      .update({
-        'archived': {
+    return await fireInstance
+        .collection('inscricoes')
+        .doc(id)
+        .update({
+          'archived': {
             'isNowArchived': isArchived == null ? false : !archived,
             'reasons': FieldValue.arrayUnion(['${DateTime.now()} - ${!archived ? 'Arquivado' : 'Restaurado'} - $reason'])
           },
-        'turma': null
-      })
-      .then((value) => true)
-      .catchError((error) => false);
+          'turma': null
+        })
+        .then((value) => true)
+        .catchError((error) => false);
   }
 
   Future<List<Map<String, dynamic>>> getInscricoesByTurma(TurmaModel model) async {
-    //var inscricoes = await FirebaseFirestore.instance.collection('testes').where('turma', isEqualTo: model.toMap()).get();
-    var inscricoes = await FirebaseFirestore.instance.collection('inscricoes').where('turma', isEqualTo: model.toMap()).get();
+    DocumentReference ref = fireInstance.collection('turmas').doc(model.id);
+    // var inscricoes = await fireInstance.collection('testes').where('turma', isEqualTo: ref).get();
+    var inscricoes = await fireInstance.collection('inscricoes').where('turma', isEqualTo: ref).get();
     List<Map<String, dynamic>> listaInscricoes = [];
     for (var inscricao in inscricoes.docs) {
       Map<String, dynamic> inscricaoData = inscricao.data();

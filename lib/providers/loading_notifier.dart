@@ -22,7 +22,7 @@ class LoadingClass extends ChangeNotifier {
     var response = await controllerRespostas.verificaInscricao(model.nome!, model.telefone!);
     if (response) {
       CollectionReference inscricoes = FirebaseFirestore.instance.collection('inscricoes');
-      //CollectionReference inscricoes = FirebaseFirestore.instance.collection('testes');
+      // CollectionReference inscricoes = FirebaseFirestore.instance.collection('testes');
       return await inscricoes.add(model.toMap()).then((value) {
         _loading = false;
         notifyListeners();

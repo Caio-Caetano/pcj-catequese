@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildPageView(int index) {
     List<Widget> list = [
       const DashboardAdminPage(),
-      const RepostasPageView(),
+      const RepostasPageView(accessLevel: 2),
       const TurmasPageView(),
       const PageViewCatequistas(),
       const HorariosLocaisPageView(),

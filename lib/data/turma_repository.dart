@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:webapp/model/turma_model.dart';
 
 class TurmaRepository {
+  var fireInstance = FirebaseFirestore.instance;
+
   Future<List<TurmaModel>> getAllTurmas({String? etapa}) async {
     List<TurmaModel> listaTurmas = [];
-    var turmas = await FirebaseFirestore.instance.collection('turmas').get();
+    var turmas = await fireInstance.collection('turmas').get();
     for (var turma in turmas.docs) {
       Map<String, dynamic> turmaData = turma.data();
       turmaData['id'] = turma.id;
@@ -15,6 +17,13 @@ class TurmaRepository {
         if (turmaData['etapa'].contains(etapa)) {
           TurmaModel model = TurmaModel.fromMap(turmaData);
           listaTurmas.add(model);
+        }
+      }
+      if (turmaData['catequistas'].isEmpty) {
+        var docRef = fireInstance.collection('turmas').doc(turma.id);
+        var result = await fireInstance.collection('testes').where('turma', isEqualTo: docRef).get();
+        for (var r in result.docs) {
+          await fireInstance.collection('testes').doc(r.id).update({'turma': null});
         }
       }
     }

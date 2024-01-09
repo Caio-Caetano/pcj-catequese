@@ -125,7 +125,7 @@ class _HomePageCoordState extends State<HomePageCoord> {
   Widget _buildPageView(int index) {
     List<Widget> list = [
       DashboardCoordenacaoPage(etapa: widget.etapa),
-      RepostasPageView(etapa: widget.etapa),
+      RepostasPageView(etapa: widget.etapa, accessLevel: 1),
       TurmasPageView(etapa: widget.etapa),
       PageViewCatequistas(etapa: widget.etapa, isCoord: true),
     ];

@@ -364,8 +364,8 @@ class __ShowDialogRemoveState extends State<_ShowDialogRemove> {
                     onTap: () => showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Deletar turma'),
-                        content: const Text('Você está prestes a deletar uma turma, tem certeza disso?'),
+                        title: Text('Remover catequista: $catequista'),
+                        content: const Text('Você está prestes a deletar o catequista desta turma, tem certeza disso?'),
                         actions: [
                           ElevatedButton(onPressed: () => Navigator.pop(context, true), child: const Text('Deletar')),
                           ElevatedButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),

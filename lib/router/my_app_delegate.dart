@@ -317,6 +317,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
             registerPage = true;
           },
           onLogin: (int al, String? nome, String? etapa) async {
+            print(al);
             accessLevel = al;
             nomeCatequista = nome;
             etapaa = etapa;
