@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webapp/controller/config_controller.dart';
 import 'package:webapp/data/auth_repository.dart';
 import 'package:webapp/enums.dart';
 import 'package:webapp/router/my_app_configuration.dart';
@@ -6,10 +7,13 @@ import 'package:webapp/router/pages/form_batismo_page_route.dart';
 import 'package:webapp/router/pages/form_contato_page.dart';
 import 'package:webapp/router/pages/form_endereco_page_route.dart';
 import 'package:webapp/router/pages/form_eucaristia_page_route.dart';
+import 'package:webapp/router/pages/form_fechado_page_route.dart';
 import 'package:webapp/router/pages/form_local_page_route.dart';
 import 'package:webapp/router/pages/form_nome_page_route.dart';
 import 'package:webapp/router/pages/form_sucesso_page_route.dart';
-import 'package:webapp/router/pages/home_page_route.dart';
+import 'package:webapp/router/pages/home_page_admin_route.dart';
+import 'package:webapp/router/pages/home_page_catequista_route.dart';
+import 'package:webapp/router/pages/home_page_coord_route.dart';
 import 'package:webapp/router/pages/login_page_route.dart';
 import 'package:webapp/router/pages/notfound_page_route.dart';
 import 'package:webapp/router/pages/register_page_route.dart';
@@ -31,10 +35,16 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   bool? get loggedIn => _loggedIn;
   set loggedIn(value) {
     if (_loggedIn == true && value == false) {
-      // It is a logout!
       _clear();
     }
     _loggedIn = value;
+    notifyListeners();
+  }
+
+  int? _accessLevel;
+  int? get accessLevel => _accessLevel;
+  set accessLevel(value) {
+    _accessLevel = value;
     notifyListeners();
   }
 
@@ -62,6 +72,20 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   Turma? get formNomes => _formNomes;
   set formNomes(Turma? value) {
     _formNomes = value;
+    notifyListeners();
+  }
+
+  Map<String, dynamic>? _configuracoes;
+  Map<String, dynamic>? get configuracoes => _configuracoes;
+  set configuracoes(Map<String, dynamic>? value) {
+    _configuracoes = value;
+    notifyListeners();
+  }
+
+  bool? _isOpen;
+  bool? get isOpen => _isOpen;
+  set isOpen(value) {
+    _isOpen = value;
     notifyListeners();
   }
 
@@ -100,6 +124,41 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
     notifyListeners();
   }
 
+  String? _response;
+  String? get response => _response;
+  set response(value) {
+    _response = value;
+    notifyListeners();
+  }
+
+  String? _etapaCoord;
+  String? get etapaCoord => _etapaCoord;
+  set etapaCoord(value) {
+    _etapaCoord = value;
+    notifyListeners();
+  }
+
+  String? _etapa;
+  String? get etapa => _etapa;
+  set etapa(value) {
+    _etapa = value;
+    notifyListeners();
+  }
+
+  String? _etapaa;
+  String? get etapaa => _etapaa;
+  set etapaa(value) {
+    _etapaa = value;
+    notifyListeners();
+  }
+
+  String? _nomeCatequista;
+  String? get nomeCatequista => _nomeCatequista;
+  set nomeCatequista(value) {
+    _nomeCatequista = value;
+    notifyListeners();
+  }
+
   @override
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
@@ -108,7 +167,15 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   }
 
   _init() async {
+    final ConfigController configController = ConfigController();
     loggedIn = await authRepository.isUserLoggedIn();
+    configuracoes = await configController.getFormAberto();
+    accessLevel = await authRepository.getAccessLevel();
+    etapaCoord = await authRepository.getEtapaCoord();
+    etapa = await authRepository.getEtapa();
+    nomeCatequista = await authRepository.getNomeCatequista();
+
+    etapaa = '$etapa - $etapaCoord';
   }
 
   @override
@@ -117,6 +184,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       return MyAppConfiguration.register();
     } else if (loggedIn == false) {
       return MyAppConfiguration.login();
+    } else if (loggedIn == true) {
+      return MyAppConfiguration.home();
     } else if (loggedIn == null) {
       return MyAppConfiguration.splash();
     } else if (show404 == true) {
@@ -130,12 +199,22 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   Widget build(BuildContext context) {
     List<Page> stack;
     final loggedIn = this.loggedIn;
+    final accessLevel = this.accessLevel;
+    final etapaCoord = this.etapaCoord;
     if (show404 == true) {
       stack = _unknownStack;
-    } else if (loggedIn == null) {
+    } else if (loggedIn == null || configuracoes == null || accessLevel == null || etapaCoord == null || nomeCatequista == null) {
       stack = _splashStack;
     } else if (loggedIn) {
-      stack = _loggedInStack;
+      if (accessLevel == 2) {
+        stack = _loggedInStackAdmin;
+      } else if (accessLevel == 1) {
+        stack = _loggedInStackCoord;
+      } else if (accessLevel == 0) {
+        stack = _loggedInStackCatequista;
+      } else {
+        stack = _loggedOutStack;
+      }
     } else if (registerPage != null) {
       stack = _registerStack;
     } else if (sucessoPage == true) {
@@ -147,6 +226,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       key: navigatorKey,
       pages: stack,
       onPopPage: (route, result) {
+        _clear();
         if (!route.didPop(result)) return false;
         return true;
       },
@@ -157,6 +237,10 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
     String? process;
     if (loggedIn == null) {
       process = 'Verificando o login...';
+    } else if (accessLevel == null) {
+      process = 'Verificando nível de acesso...';
+    } else if (configuracoes == null) {
+      process = 'Carregando configurações...';
     } else {
       process = "Processo indefinido...";
     }
@@ -167,11 +251,16 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
 
   List<Page> get _unknownStack => [const NotFoundPageRoute()];
 
-  List<Page> get _sucessoStack => [
-        FormSucessoPageRoute(onSubmit: () {
-          _clear();
-        })
-      ];
+  List<Page> get _sucessoStack {
+    final response = this.response;
+    return [
+      FormSucessoPageRoute(
+          response: response!,
+          onSubmit: () {
+            _clear();
+          })
+    ];
+  }
 
   List<Page> get _registerStack {
     final formNomes = this.formNomes;
@@ -181,7 +270,18 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
     final formEucaristia = this.formEucaristia;
     final formLocal = this.formLocal;
 
+    final configuracoes = this.configuracoes;
+    bool isOpen = this.isOpen ?? true;
+
     String etapa = _extractTextFromTurma(formNomes ?? Turma.erro);
+
+    if (configuracoes != null) {
+      for (var element in configuracoes.keys) {
+        if (etapa.toLowerCase().contains(element)) {
+          isOpen = configuracoes[element];
+        }
+      }
+    }
 
     Function() onSubmitBatismoEucaristia(String etapa) {
       if (etapa.contains('Eucaristia')) {
@@ -193,7 +293,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
 
     return [
       RegisterPageRoute((Turma? turma) => this.formNomes = turma, () => _clear()),
-      if (formNomes != null) FormNomesPageRoute(etapa: etapa, onSubmit: () => this.formEndereco = true),
+      if (formNomes != null && !isOpen) FormFechadoPageRoute(onSubmit: () => _clear(), etapa: etapa),
+      if (formNomes != null && isOpen) FormNomesPageRoute(etapa: etapa, onSubmit: () => this.formEndereco = true),
       if (formNomes != null && formEndereco == true) FormEnderecoPageRoute(etapa: etapa, onSubmit: () => this.formContato = true),
       if (formNomes != null && formContato == true) FormContatoPageRoute(etapa: etapa, onSubmit: () => this.formBatismo = true),
       if (formNomes != null && formBatismo == true) FormBatismoPageRoute(etapa: etapa, onSubmit: onSubmitBatismoEucaristia(etapa)),
@@ -201,7 +302,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       if (formNomes != null && formLocal == true)
         FormLocalPageRoute(
           etapa: etapa,
-          onSubmit: () {
+          onSubmit: (response) {
+            this.response = response;
             _clear();
             sucessoPage = true;
           },
@@ -210,12 +312,37 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   }
 
   List<Page> get _loggedOutStack => [
-        LoginPageRoute(onRegisterClick: () => registerPage = true),
+        LoginPageRoute(
+          onRegisterClick: () {
+            registerPage = true;
+          },
+          onLogin: (int al, String? nome, String? etapa) async {
+            print(al);
+            accessLevel = al;
+            nomeCatequista = nome;
+            etapaa = etapa;
+            etapaCoord = etapa!.split('-')[1].trim();
+            loggedIn = true;
+            await _init();
+          },
+        ),
       ];
 
-  List<Page> get _loggedInStack {
+  List<Page> get _loggedInStackAdmin {
     return [
-      const HomePageRoute(),
+      HomePageRouteAdmin(onLogout: () => loggedIn = false),
+    ];
+  }
+
+  List<Page> get _loggedInStackCoord {
+    return [
+      HomePageRouteCoord(onLogout: () => loggedIn = false, etapa: etapaCoord, nomeCatequista: nomeCatequista),
+    ];
+  }
+
+  List<Page> get _loggedInStackCatequista {
+    return [
+      HomePageRouteCatequista(onLogout: () => loggedIn = false, etapa: etapaa, catequista: nomeCatequista),
     ];
   }
 

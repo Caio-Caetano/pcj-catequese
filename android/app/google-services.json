@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "934519095067",
+    "project_id": "pcj-catequese",
+    "storage_bucket": "pcj-catequese.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934519095067:android:a3ca7498f0c374a1d51dbe",
+        "android_client_info": {
+          "package_name": "com.example.webapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrrYA7VIGGra49Wgc5-eIoba0nDl1DpWw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

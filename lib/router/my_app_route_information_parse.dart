@@ -41,7 +41,7 @@ class MyAppRouteInformationParser extends RouteInformationParser<MyAppConfigurat
     } else if (configuration.isSucessoPage) {
       return RouteInformation(uri: Uri.parse('/sucesso'));
     } else if (configuration.isHomePage) {
-      return RouteInformation(uri: Uri.parse('/'));
+      return RouteInformation(uri: Uri.parse('/home'));
     } else {
       return null;
     }

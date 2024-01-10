@@ -26,33 +26,35 @@ class FormularioContato extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(etapa, style: const TextStyle(color: Colors.white)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: key,
-          child: Wrap(
-            runSpacing: 20,
-            children: [
-              TextFieldCustom(
-                controller: telefoneController,
-                labelText: 'Telefone:',
-                formatter: [maskFormatter],
-                iconPrefix: const Icon(Icons.phone),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '⚠️ Este campo é obrigatório.';
-                  }
-                  return null;
-                },
-                hintText: 'Digite o seu telefone (WhatsApp)*',
-              ),
-              TextFieldCustom(
-                controller: emailController,
-                labelText: 'E-mail:',
-                iconPrefix: const Icon(Icons.email),
-                hintText: 'Digite um e-mail para contato',
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: key,
+            child: Wrap(
+              runSpacing: 20,
+              children: [
+                TextFieldCustom(
+                  controller: telefoneController,
+                  labelText: 'Telefone:',
+                  formatter: [maskFormatter],
+                  iconPrefix: const Icon(Icons.phone),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '⚠️ Este campo é obrigatório.';
+                    }
+                    return null;
+                  },
+                  hintText: 'Digite o seu telefone (WhatsApp)*',
+                ),
+                TextFieldCustom(
+                  controller: emailController,
+                  labelText: 'E-mail:',
+                  iconPrefix: const Icon(Icons.email),
+                  hintText: 'Digite um e-mail para contato',
+                ),
+              ],
+            ),
           ),
         ),
       ),

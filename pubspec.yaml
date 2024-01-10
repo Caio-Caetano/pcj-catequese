@@ -44,6 +44,20 @@ dependencies:
   lottie: ^2.6.0
   search_cep: ^4.0.2
   file_picker: ^6.0.0
+  firebase_core: ^2.20.0
+  cloud_firestore: ^4.12.1
+  flutter_speed_dial: ^7.0.0
+  firebase_auth: ^4.12.1
+  crypto: ^3.0.3
+  easy_sidemenu: ^0.5.0
+  excel: ^3.0.0
+  path: ^1.8.3
+  firebase_storage: ^11.5.0
+  percent_indicator: ^4.2.3
+  get: ^4.6.6
+  url_launcher: ^6.2.1
+  data_table_2: ^2.5.9
+  flutter_side_menu: ^0.4.0
 
 dev_dependencies:
   flutter_test:

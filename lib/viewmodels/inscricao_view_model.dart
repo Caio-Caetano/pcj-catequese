@@ -55,4 +55,9 @@ class InscricaoProvider with ChangeNotifier {
     _inscricaoInfo.etapa = etapa;
     notifyListeners();
   }
+
+  void updateDtInscricao(String? dataInscricao) {
+    _inscricaoInfo.dataInscricao = dataInscricao;
+    notifyListeners();
+  }
 }

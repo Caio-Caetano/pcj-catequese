@@ -83,6 +83,7 @@ class RegisterCatechized extends StatelessWidget {
               inscricaoProvider.updateNascimento(InscricaoModel()
                 ..dataNascimento = maskFormatter.getMaskedText()
                 ..idade = age['idade'].toString());
+              inscricaoProvider.updateDtInscricao(DateTime.now().toString());
               onSubmit(age['etapa']);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
