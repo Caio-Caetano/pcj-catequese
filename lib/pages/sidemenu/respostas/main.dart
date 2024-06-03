@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/functions/create_excel.dart';
+// import 'package:webapp/pages/admin/insert_page/individual_page.dart';
+// import 'package:webapp/pages/sidemenu/respostas/admin/insert_manually_dialog.dart';
 import 'package:webapp/pages/sidemenu/respostas/list.dart';
 import 'package:webapp/pages/widgets/dropdown_custom.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
@@ -103,188 +105,209 @@ class _RepostasPageViewState extends State<RepostasPageView> {
   @override
   Widget build(BuildContext context) {
     inscricoes.sort((a, b) => b['dataInscricao'].compareTo(a['dataInscricao']));
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextFieldCustom(
-                  iconPrefix: const Icon(Icons.search),
-                  controller: controllerSearch,
-                  hintText: 'Pesquisar por nome...',
-                  onChanged: (value) {
-                    filterSearchResults(value);
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextFieldCustom(
+                    iconPrefix: const Icon(Icons.search),
+                    controller: controllerSearch,
+                    hintText: 'Pesquisar por nome...',
+                    onChanged: (value) {
+                      filterSearchResults(value);
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Filtro'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (widget.etapa == null) Text('Etapa', style: Theme.of(context).textTheme.bodyMedium),
+                              if (widget.etapa == null)
+                                DropdownButtonCustom(
+                                  value: etapaTotalFiltro,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      etapaFiltro = null;
+                                      localFiltro = null;
+                                      turmaAtribuida = null;
+                                      etapaTotalFiltro = newValue!;
+                                    });
+                                  },
+                                  items: etapaMenu,
+                                ),
+                              Padding(padding: const EdgeInsets.only(top: 12.0), child: Container(height: 3, width: 50, color: Colors.red)),
+                              Text('Etapa detalhada', style: Theme.of(context).textTheme.bodyMedium),
+                              DropdownButtonCustom(
+                                value: etapaFiltro,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    etapaFiltro = newValue!;
+                                    etapaTotalFiltro = null;
+                                  });
+                                },
+                                items: etapasUnicas.map<DropdownMenuItem<String>>((e) => DropdownMenuItem<String>(value: e, child: Text(e, style: const TextStyle(fontSize: 14)))).toList(),
+                              ),
+                              Text('Local', style: Theme.of(context).textTheme.bodyMedium),
+                              DropdownButtonCustom(
+                                value: localFiltro,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    localFiltro = newValue!;
+                                    etapaTotalFiltro = null;
+                                  });
+                                },
+                                items: locaisUnicos.map<DropdownMenuItem<String>>((e) => DropdownMenuItem<String>(value: e, child: Text(e, style: const TextStyle(fontSize: 14)))).toList(),
+                              ),
+                              Padding(padding: const EdgeInsets.only(top: 12.0), child: Container(height: 3, width: 50, color: Colors.red)),
+                              DropdownButtonCustom(
+                                label: 'Turma atribuída',
+                                value: turmaAtribuida,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    turmaAtribuida = newValue;
+                                  });
+                                },
+                                items: turmaMenu,
+                              ),
+                            ],
+                          ),
+                          actionsAlignment: MainAxisAlignment.center,
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: ElevatedButton(onPressed: () => Navigator.pop(context, {'etapa': etapaFiltro, 'local': localFiltro, 'etapaTotal': etapaTotalFiltro, 'turma': turmaAtribuida}), child: const Text('Filtrar')),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Limpar'), child: const Text('Limpar')),
+                            ),
+                          ],
+                        );
+                      },
+                    ).then(
+                      (value) => setState(
+                        () {
+                          value ??= 'Limpar';
+                          if (value != 'Limpar') {
+                            inscricoes = duplicateItems.where((e) {
+                              // Verifica se está selecionado a ETAPA (Eucaristia, Crisma, Jovens ou Adultos)
+                              if (value['etapaTotal'] != null) {
+                                return e['etapa'].contains(value['etapaTotal']);
+                              }
+
+                              // Verifica se está selecionado a ETAPA ESPECÍFICA
+                              if (value['etapa'] != null) {
+                                // Verifica se possui LOCAL também selecionado
+                                if (value['local'] != null) {
+                                  return e['etapa'].contains(value['etapa']) && e['local'].contains(value['local']);
+                                }
+                                return e['etapa'].contains(value['etapa']);
+                              }
+
+                              // Verifica se apenas o LOCAL está selecionado
+                              if (value['local'] != null) {
+                                return e['local'] == value['local'];
+                              }
+
+                              // Retorna false como ERRO
+                              return false;
+                            }).toList();
+
+                            // Última verificação para saber se está com TURMA ou NÃO
+                            if (value['turma'] != null) {
+                              if (inscricoes.isNotEmpty) {
+                                if (value['turma'] == 'Sim') {
+                                  inscricoes = inscricoes.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
+                                } else if (value['turma'] == 'Não') {
+                                  inscricoes = inscricoes.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
+                                } else {
+                                  inscricoes = inscricoes;
+                                }
+                              } else {
+                                if (value['turma'] == 'Sim') {
+                                  inscricoes = duplicateItems.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
+                                } else if (value['turma'] == 'Não') {
+                                  inscricoes = duplicateItems.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
+                                } else {
+                                  inscricoes = duplicateItems;
+                                }
+                              }
+                            }
+                          } else {
+                            etapaFiltro = null;
+                            localFiltro = null;
+                            etapaTotalFiltro = null;
+                            turmaAtribuida = null;
+                            inscricoes = duplicateItems;
+                          }
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(100, 74, 74, 74)),
+                    child: Image.asset('./assets/images/filter.png', width: 30),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                InkWell(
+                  onTap: () async => await exportToExcel(inscricoes),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(255, 140, 235, 143)),
+                    child: Image.asset('./assets/images/excel.png', width: 30),
+                  ),
+                ),
+              ],
+            ),
+            if (isLoading) const Text('Carregando...'),
+            criarListaInscricoes(
+              inscricoes,
+              () async => await getInscricoes().then(
+                (value) => setState(
+                  () {
+                    inscricoes = value;
                   },
                 ),
               ),
-              const SizedBox(width: 10),
-              InkWell(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Filtro'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (widget.etapa == null) Text('Etapa', style: Theme.of(context).textTheme.bodyMedium),
-                            if (widget.etapa == null)
-                              DropdownButtonCustom(
-                                value: etapaTotalFiltro,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    etapaFiltro = null;
-                                    localFiltro = null;
-                                    turmaAtribuida = null;
-                                    etapaTotalFiltro = newValue!;
-                                  });
-                                },
-                                items: etapaMenu,
-                              ),
-                            Padding(padding: const EdgeInsets.only(top: 12.0), child: Container(height: 3, width: 50, color: Colors.red)),
-                            Text('Etapa detalhada', style: Theme.of(context).textTheme.bodyMedium),
-                            DropdownButtonCustom(
-                              value: etapaFiltro,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  etapaFiltro = newValue!;
-                                  etapaTotalFiltro = null;
-                                });
-                              },
-                              items: etapasUnicas.map<DropdownMenuItem<String>>((e) => DropdownMenuItem<String>(value: e, child: Text(e, style: const TextStyle(fontSize: 14)))).toList(),
-                            ),
-                            Text('Local', style: Theme.of(context).textTheme.bodyMedium),
-                            DropdownButtonCustom(
-                              value: localFiltro,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  localFiltro = newValue!;
-                                  etapaTotalFiltro = null;
-                                });
-                              },
-                              items: locaisUnicos.map<DropdownMenuItem<String>>((e) => DropdownMenuItem<String>(value: e, child: Text(e, style: const TextStyle(fontSize: 14)))).toList(),
-                            ),
-                            Padding(padding: const EdgeInsets.only(top: 12.0), child: Container(height: 3, width: 50, color: Colors.red)),
-                            DropdownButtonCustom(
-                              label: 'Turma atribuída',
-                              value: turmaAtribuida,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  turmaAtribuida = newValue;
-                                });
-                              },
-                              items: turmaMenu,
-                            ),
-                          ],
-                        ),
-                        actionsAlignment: MainAxisAlignment.center,
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: ElevatedButton(onPressed: () => Navigator.pop(context, {'etapa': etapaFiltro, 'local': localFiltro, 'etapaTotal': etapaTotalFiltro, 'turma': turmaAtribuida}), child: const Text('Filtrar')),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Limpar'), child: const Text('Limpar')),
-                          ),
-                        ],
-                      );
-                    },
-                  ).then(
-                    (value) => setState(
-                      () {
-                        value ??= 'Limpar';
-                        if (value != 'Limpar') {
-                          inscricoes = duplicateItems.where((e) {
-                            // Verifica se está selecionado a ETAPA (Eucaristia, Crisma, Jovens ou Adultos)
-                            if (value['etapaTotal'] != null) {
-                              return e['etapa'].contains(value['etapaTotal']);
-                            }
-
-                            // Verifica se está selecionado a ETAPA ESPECÍFICA
-                            if (value['etapa'] != null) {
-                              // Verifica se possui LOCAL também selecionado
-                              if (value['local'] != null) {
-                                return e['etapa'].contains(value['etapa']) && e['local'].contains(value['local']);
-                              }
-                              return e['etapa'].contains(value['etapa']);
-                            }
-
-                            // Verifica se apenas o LOCAL está selecionado
-                            if (value['local'] != null) {
-                              return e['local'] == value['local'];
-                            }
-
-                            // Retorna false como ERRO
-                            return false;
-                          }).toList();
-
-                          // Última verificação para saber se está com TURMA ou NÃO
-                          if (value['turma'] != null) {
-                            if (inscricoes.isNotEmpty) {
-                              if (value['turma'] == 'Sim') {
-                                inscricoes = inscricoes.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
-                              } else if (value['turma'] == 'Não') {
-                                inscricoes = inscricoes.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
-                              } else {
-                                inscricoes = inscricoes;
-                              }
-                            } else {
-                              if (value['turma'] == 'Sim') {
-                                inscricoes = duplicateItems.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
-                              } else if (value['turma'] == 'Não') {
-                                inscricoes = duplicateItems.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
-                              } else {
-                                inscricoes = duplicateItems;
-                              }
-                            }
-                          }
-                        } else {
-                          etapaFiltro = null;
-                          localFiltro = null;
-                          etapaTotalFiltro = null;
-                          turmaAtribuida = null;
-                          inscricoes = duplicateItems;
-                        }
-                      },
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(100, 74, 74, 74)),
-                  child: Image.asset('./assets/images/filter.png', width: 30),
-                ),
-              ),
-              const SizedBox(width: 10),
-              InkWell(
-                onTap: () async => await exportToExcel(inscricoes),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(255, 140, 235, 143)),
-                  child: Image.asset('./assets/images/excel.png', width: 30),
-                ),
-              ),
-            ],
-          ),
-          if (isLoading) const Text('Carregando...'),
-          criarListaInscricoes(
-            inscricoes,
-            () async => await getInscricoes().then(
-              (value) => setState(
-                () {
-                  inscricoes = value;
-                },
-              ),
+              widget.accessLevel,
             ),
-            widget.accessLevel,
-          ),
-        ],
+          ],
+        ),
       ),
+      // floatingActionButton: widget.accessLevel == 2
+      //     ? FloatingActionButton.extended(
+      //         onPressed: () async {
+      //           //var result = await showDialog(context: context, builder: (context) => const InsertManuallyDialog());
+
+      //           if (result == null) return;
+
+      //           if (!context.mounted) return;
+
+      //           if (result) {
+      //             // Navega para a página de inserção individual.
+      //             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const InscricaoManualPage()));
+      //           } else {
+      //             // Navega para a página de inserção em massa.
+      //           }
+      //         },
+      //         label: const Text('Inserir', style: TextStyle(fontWeight: FontWeight.bold)),
+      //       )
+      //     : Container(),
     );
   }
 }

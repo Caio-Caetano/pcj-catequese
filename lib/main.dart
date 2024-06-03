@@ -44,15 +44,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthViewModel>(
-          create: (_) => AuthViewModel(authRepository),
-        ),
-        ChangeNotifierProvider<InscricaoProvider>(
-          create: (_) => InscricaoProvider(),
-        ),
-        ChangeNotifierProvider<LoadingClass>(
-          create: (_) => LoadingClass(),
-        ),
+        ChangeNotifierProvider<AuthViewModel>(create: (_) => AuthViewModel(authRepository)),
+        ChangeNotifierProvider<InscricaoProvider>(create: (_) => InscricaoProvider()),
+        ChangeNotifierProvider<LoadingClass>(create: (_) => LoadingClass()),
       ],
       child: MaterialApp.router(
         title: 'Catequese PCJ',

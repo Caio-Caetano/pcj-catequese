@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                 items: [
                   _buildTile(index: 0, title: 'Dashboard', icon: Icons.dashboard_outlined, selectedIcon: Icons.dashboard),
-                  _buildTile(index: 1, title: 'Respostas', icon: Icons.article_outlined, selectedIcon: Icons.article),
+                  _buildTile(index: 1, title: 'Inscrições', icon: Icons.article_outlined, selectedIcon: Icons.article),
                   _buildTile(index: 2, title: 'Turmas', icon: Icons.groups_outlined, selectedIcon: Icons.groups),
                   _buildTile(index: 3, title: 'Catequistas', icon: Icons.people_outlined, selectedIcon: Icons.people),
                   _buildTile(index: 4, title: 'Horários e Locais', icon: Icons.timelapse_outlined, selectedIcon: Icons.timelapse),

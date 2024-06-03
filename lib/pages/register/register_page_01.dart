@@ -5,6 +5,7 @@ import 'package:webapp/enums.dart';
 import 'package:webapp/functions/classes/separete.dart';
 import 'package:webapp/functions/validators/date_validator.dart';
 import 'package:webapp/model/inscricao_model.dart';
+import 'package:webapp/pages/widgets/appbar_custom.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
@@ -24,25 +25,23 @@ class RegisterCatechized extends StatelessWidget {
 
     final formKey = GlobalKey<FormState>();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Inscrição - PCJ'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: InkWell(
-              hoverColor: Colors.transparent,
-              onTap: onClose,
-              child: const Row(
-                children: [
-                  Text('Início', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(width: 10),
-                  Icon(Icons.home, color: Colors.black),
-                ],
-              ),
+      appBar: appBarCustom(
+        'Inscrição - PCJ',
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: InkWell(
+            hoverColor: Colors.transparent,
+            onTap: onClose,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.arrow_back_ios, color: Colors.black),
+                SizedBox(width: 5.0),
+                Text('Voltar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              ],
             ),
           ),
-        ],
+        ),
       ),
       body: Form(
         key: formKey,
