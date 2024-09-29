@@ -22,15 +22,18 @@ Widget viewDialog(Map<String, dynamic> inscricao, VoidCallback back, BuildContex
           Text('Bairro: ${inscricao['endereco']['bairro']}', style: Theme.of(context).textTheme.labelLarge),
           Text('CEP: ${inscricao['endereco']['cep']}', style: Theme.of(context).textTheme.labelLarge),
           if (inscricao['batismo'] != null || inscricao['eucaristia'] != null) const Divider(),
+
           if (inscricao['batismo'] != null && inscricao['batismo']['arquivo'] != null)
-            GestureDetector(onTap: () => launch(inscricao['batismo']['arquivo'], isNewTab: true), child: Text('Visualizar batistério - Clique para baixar', style: Theme.of(context).textTheme.labelLarge))
+            InkWell(onTap: () => launch(inscricao['batismo']['arquivo'], isNewTab: false), child: Text('Visualizar batistério - Clique para baixar', style: Theme.of(context).textTheme.labelLarge))
           else
             Text('Não possui batismo', style: Theme.of(context).textTheme.labelLarge),
+          
           if (inscricao['eucaristia'] != null && inscricao['eucaristia']['arquivo'] != null)
-            GestureDetector(onTap: () => launch(inscricao['eucaristia']['arquivo'], isNewTab: true), child: Text('Visualizar lembraça 1º Eucaristia - Clique para baixar', style: Theme.of(context).textTheme.labelLarge))
+            InkWell(onTap: () => launch(inscricao['eucaristia']['arquivo'], isNewTab: false), child: Text('Visualizar lembraça 1º Eucaristia - Clique para baixar', style: Theme.of(context).textTheme.labelLarge))
           else
             Text('Não possui 1º eucaristia', style: Theme.of(context).textTheme.labelLarge),
           const Divider(),
+
           Text('Etapa: ${inscricao['etapa']}', style: Theme.of(context).textTheme.labelLarge),
           Text('Catequista: ${inscricao['turma'] == null ? 'Não definido' : inscricao['turma']['catequistas']}', style: Theme.of(context).textTheme.labelLarge),
           const Divider(),

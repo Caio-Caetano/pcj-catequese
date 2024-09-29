@@ -16,6 +16,7 @@ class TextFieldCustom extends StatefulWidget {
     this.isPassword = false,
     this.labelColor,
     this.maxLines = 1,
+    this.filled = false,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -33,6 +34,8 @@ class TextFieldCustom extends StatefulWidget {
   final Color? labelColor;
 
   final int? maxLines;
+
+  final bool? filled;
 
   @override
   State<TextFieldCustom> createState() => _TextFieldCustomState();
@@ -66,6 +69,8 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
           obscuringCharacter: '*',
           maxLines: widget.maxLines,
           decoration: InputDecoration(
+            filled: widget.filled,
+            fillColor: Colors.white,
             prefixIcon: widget.iconPrefix,
             hintText: widget.hintText,
             hintStyle: Theme.of(context).textTheme.labelLarge,

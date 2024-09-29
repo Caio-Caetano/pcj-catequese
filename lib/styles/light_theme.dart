@@ -12,6 +12,7 @@ ThemeData lightTheme = ThemeData(
       bodyMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Colors.black),
       bodySmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Colors.white),
       labelMedium: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black),
+      labelLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
       labelSmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black),
     ),
   ),
@@ -20,4 +21,6 @@ ThemeData lightTheme = ThemeData(
     iconTheme: IconThemeData(color: Colors.white),
   ),
   colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+
+  
 );
