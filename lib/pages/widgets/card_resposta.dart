@@ -83,12 +83,16 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
                               nome: inscricao['nome'],
                               onSubmit: (reason) async {
                                 await controller.archiveInscricao(inscricao['id'], reason, inscricao['archived'] == null ? false : inscricao['archived']['isNowArchived']).then((value) {
-                                  Navigator.pop(context, value);
+                                  if (context.mounted) Navigator.pop(context, value);
                                   setstate();
                                 });
                               },
                             );
-                          }).then((value) => value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('📁 Arquivado com sucesso.')));
+                          }).then((value) {
+                            if (context.mounted) {
+                              return value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('📁 Arquivado com sucesso.'));
+                            }
+                          });
                     },
                     icon: const Icon(Icons.archive, color: Colors.blueGrey),
                   ),
@@ -105,7 +109,9 @@ Widget cardResposta({required Map<String, dynamic> inscricao, required BuildCont
                                   setstate();
                                 },
                                 back: () => Navigator.pop(context, false));
-                          }).then((value) => value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!')));
+                          }).then((value) {
+                            if (context.mounted) return value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!'));
+                          });
                     },
                     icon: const Icon(Icons.delete_forever, color: Colors.red),
                   ),

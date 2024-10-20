@@ -372,12 +372,9 @@ class _ListaDeInscricoesState extends State<ListaDeInscricoes> {
             horizontalInside: const BorderSide(color: Colors.grey, width: 1)),
         onRowsPerPageChanged: (value) {
           _rowsPerPage = value!;
-          print(_rowsPerPage);
         },
         initialFirstRowIndex: 0,
-        onPageChanged: (rowIndex) {
-          print(rowIndex / _rowsPerPage);
-        },
+        onPageChanged: (rowIndex) {},
         sortColumnIndex: _sortColumnIndex,
         sortAscending: _sortAscending,
         sortArrowIcon: Icons.keyboard_arrow_up, // custom arrow

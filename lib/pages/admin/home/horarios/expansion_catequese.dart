@@ -55,7 +55,7 @@ class _ExpansionLocaisState extends State<ExpansionLocais> {
                     ).then(
                       (value) async {
                         if (value == null || !value) {
-                          ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                          if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
                         } else {
                           await horariosLocaisController.addHorarioLocais(etapa: widget.etapa, horario: valueNotifier.value).then((value) => setState(() {}));
                         }

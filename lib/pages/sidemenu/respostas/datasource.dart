@@ -1,12 +1,9 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:toastification/toastification.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/model/inscricao_model.dart';
-import 'package:webapp/pages/widgets/dialog_archive_inscricao.dart';
-import 'package:webapp/pages/widgets/dialog_delete.dart';
 import 'package:webapp/pages/widgets/dialog_download_arquivos.dart';
 import 'package:webapp/pages/widgets/dialog_view.dart';
 

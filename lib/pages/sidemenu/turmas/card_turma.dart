@@ -34,11 +34,13 @@ class _CardTurmaState extends State<CardTurma> {
                         cancel: () => Navigator.pop(context, false),
                       )).then((value) async {
                 if (value == null || !value) {
-                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
                 } else {
                   await turmaController.deleteTurma(widget.model.id!).then((value) {
                     widget.onDelete();
-                    return ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Deletado com sucesso.'));
+                    if (context.mounted) {
+                      return ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Deletado com sucesso.'));
+                    }
                   });
                 }
               });
