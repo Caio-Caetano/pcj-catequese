@@ -28,6 +28,8 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
     'eucaristia-arquivo',
     'local',
     'etapa',
+    'arquivado',
+    'arquivado-motivo',
   ];
 
   for (var i = 0; i < headers.length; i++) {
@@ -37,12 +39,23 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
   // Adicione dados
   var indexRow = 1;
   for (var singleData in data) {
+    if (singleData.containsKey('turma')) {
+      singleData.remove('turma');
+    }
+    bool isNowArchived = singleData['archived']?['isNowArchived'] ?? false;
     singleData.forEach((key, value) {
       var parent = key;
       if (value is Map) {
         value.forEach((key, value) {
-          var flag = headers.indexOf('$parent-$key');
-          sheet.cell(CellIndex.indexByColumnRow(rowIndex: indexRow, columnIndex: flag)).value = value is bool ? value.toString() : value;
+          var flag = 0;
+          if (key == 'reasons') {
+            flag = headers.indexOf('arquivado-motivo');
+          } else if (key == 'isNowArchived') {
+            flag = headers.indexOf('arquivado');
+          } else {
+            flag = headers.indexOf('$parent-$key');
+          }
+          sheet.cell(CellIndex.indexByColumnRow(rowIndex: indexRow, columnIndex: flag)).value = value is bool ? (value ? 'Sim' : 'Não') : value;
         });
       } else {
         if (value != null) {
@@ -51,6 +64,18 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
         }
       }
     });
+
+    // Destacar a linha se 'isNowArchived' for true
+    if (isNowArchived) {
+      for (var i = 0; i < headers.length; i++) {
+        var cell = sheet.cell(CellIndex.indexByColumnRow(
+            rowIndex: indexRow, columnIndex: i));
+        cell.cellStyle = CellStyle(
+          backgroundColorHex: "#D3D3D3", // Cor cinza claro
+          fontFamily: getFontFamily(FontFamily.Arial),
+        );
+      }
+    }
     indexRow++;
   }
 

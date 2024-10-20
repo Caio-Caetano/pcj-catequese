@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
+import 'package:webapp/enums.dart';
+import 'package:webapp/model/dashboard_model.dart';
+import 'package:webapp/pages/widgets/select_ano.dart';
 
-class DashboardAdminPage extends StatelessWidget {
+import 'chart.dart';
+
+class DashboardAdminPage extends StatefulWidget {
   const DashboardAdminPage({super.key});
+
+  @override
+  State<DashboardAdminPage> createState() => _DashboardAdminPageState();
+}
+
+class _DashboardAdminPageState extends State<DashboardAdminPage> {
+  String anoSelecionado = dotenv.env['INSCRICAO'] ?? '';
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +36,22 @@ class DashboardAdminPage extends StatelessWidget {
     int totalJovens = 0;
     int totalAdultos = 0;
 
+    void onChangeAno(String value) async {      
+      setState(() {
+        anoSelecionado = value;
+      });
+    }
+
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
           Text('Dashboard', style: Theme.of(context).textTheme.titleLarge),
+          SelectAno(onChange: onChangeAno),
+          const SizedBox(height: 10),
           Expanded(
             child: FutureBuilder(
-              future: controllerRespostas.getRespostas(),
+              future: controllerRespostas.getRespostas(collection: anoSelecionado),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: Text('Carregando...'));
@@ -39,6 +59,7 @@ class DashboardAdminPage extends StatelessWidget {
 
                 if (snapshot.data != null) {
                   for (var element in snapshot.data!) {
+                    // Incrementa a quantidade para cada etapa principal
                     if (element['etapa'].contains('Eucaristia')) {
                       totalEucaristia++;
                     } else if (element['etapa'].contains('Crisma')) {
@@ -48,116 +69,66 @@ class DashboardAdminPage extends StatelessWidget {
                     } else if (element['etapa'].contains('Adultos')) {
                       totalAdultos++;
                     }
+                }
+                  
+                for (var element in snapshot.data!) {
+                  // Incrementa a quantidade para as listaInscricoesDashboardModel específicas
+                  switch (element['etapa']) {
+                    case '1º Etapa - Eucaristia':
+                      totalEucaristia1++;
+                      break;
+                    case '2º Etapa - Eucaristia':
+                      totalEucaristia2++;
+                      break;
+                    case '3º Etapa - Eucaristia':
+                      totalEucaristia3++;
+                      break;
+                    case '1º Etapa - Crisma':
+                      totalCrisma1++;
+                      break;
+                    case '2º Etapa - Crisma':
+                      totalCrisma2++;
+                      break;
+                    case '3º Etapa - Crisma':
+                      totalCrisma3++;
+                      break;
+                    default:
+                      break;
                   }
                 }
+              }
 
-                if (snapshot.data != null) {
-                  for (var element in snapshot.data!) {
-                    switch (element['etapa']) {
-                      case '1º Etapa - Eucaristia':
-                        totalEucaristia1++;
-                        break;
-                      case '2º Etapa - Eucaristia':
-                        totalEucaristia2++;
-                        break;
-                      case '3º Etapa - Eucaristia':
-                        totalEucaristia3++;
-                        break;
-                      case '1º Etapa - Crisma':
-                        totalCrisma1++;
-                        break;
-                      case '2º Etapa - Crisma':
-                        totalCrisma2++;
-                        break;
-                      case '3º Etapa - Crisma':
-                        totalCrisma3++;
-                        break;
-                      default:
-                        break;
-                    }
-                  }
-                }
+              List<InscricoesDashboardModel> listaInscricoesTotaisDashboardModel = [
+                InscricoesDashboardModel(titulo: 'Eucaristia', quantidade: totalEucaristia),
+                InscricoesDashboardModel(titulo: 'Crisma', quantidade: totalCrisma),
+                InscricoesDashboardModel(titulo: 'Jovens', quantidade: totalJovens),
+                InscricoesDashboardModel(titulo: 'Adultos', quantidade: totalAdultos),
+              ];
 
-                return Wrap(
-                  spacing: 10.0,
-                  runSpacing: 5.0,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: Text('Detalhado', style: Theme.of(context).textTheme.titleLarge),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('$totalEucaristia1 :: 1º Etapa - Eucaristia', style: Theme.of(context).textTheme.bodyMedium),
-                                    const SizedBox(height: 10),
-                                    Text('$totalEucaristia2 :: 2º Etapa - Eucaristia', style: Theme.of(context).textTheme.bodyMedium),
-                                    const SizedBox(height: 10),
-                                    Text('$totalEucaristia3 :: 3º Etapa - Eucaristia', style: Theme.of(context).textTheme.bodyMedium),
-                                  ],
-                                ),
-                              )),
-                      child: CircularPercentIndicator(
-                        radius: 50,
-                        animation: true,
-                        percent: 1.0,
-                        progressColor: Colors.green,
-                        center: Text('$totalEucaristia', style: Theme.of(context).textTheme.titleMedium),
-                        footer: const Text('Eucaristia'),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: Text('Detalhado', style: Theme.of(context).textTheme.titleLarge),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('$totalCrisma1 :: 1º Etapa - Crisma', style: Theme.of(context).textTheme.bodyMedium),
-                                    const SizedBox(height: 10),
-                                    Text('$totalCrisma2 :: 2º Etapa - Crisma', style: Theme.of(context).textTheme.bodyMedium),
-                                    const SizedBox(height: 10),
-                                    Text('$totalCrisma3 :: 3º Etapa - Crisma', style: Theme.of(context).textTheme.bodyMedium),
-                                  ],
-                                ),
-                              )),
-                      child: CircularPercentIndicator(
-                        radius: 50,
-                        animation: true,
-                        percent: 1.0,
-                        progressColor: Colors.blue,
-                        center: Text('$totalCrisma', style: Theme.of(context).textTheme.titleMedium),
-                        footer: const Text('Crisma'),
-                      ),
-                    ),
-                    CircularPercentIndicator(
-                      radius: 50,
-                      animation: true,
-                      percent: 1.0,
-                      progressColor: Colors.yellow,
-                      center: Text('$totalJovens', style: Theme.of(context).textTheme.titleMedium),
-                      footer: const Text('Jovens'),
-                    ),
-                    CircularPercentIndicator(
-                      radius: 50,
-                      animation: true,
-                      percent: 1.0,
-                      progressColor: Colors.indigo,
-                      center: Text('$totalAdultos', style: Theme.of(context).textTheme.titleMedium),
-                      footer: const Text('Adultos'),
-                    ),
-                    CircularPercentIndicator(
-                      radius: 50,
-                      animation: true,
-                      percent: 1.0,
-                      progressColor: Colors.deepOrange,
-                      center: Text('${snapshot.data?.length}', style: Theme.of(context).textTheme.titleMedium),
-                      footer: const Text('Total'),
-                    ),
-                  ],
+              List<InscricoesDashboardModel> listaInscricoesEucaristia = [
+                InscricoesDashboardModel(titulo: '1º Etapa - Eucaristia', quantidade: totalEucaristia1),
+                InscricoesDashboardModel(titulo: '2º Etapa - Eucaristia', quantidade: totalEucaristia2),
+                InscricoesDashboardModel(titulo: '3º Etapa - Eucaristia', quantidade: totalEucaristia3),
+              ];
+
+              List<InscricoesDashboardModel> listaInscricoesCrisma = [
+                InscricoesDashboardModel(titulo: '1º Etapa - Crisma', quantidade: totalCrisma1),
+                InscricoesDashboardModel(titulo: '2º Etapa - Crisma', quantidade: totalCrisma2),
+                InscricoesDashboardModel(titulo: '3º Etapa - Crisma', quantidade: totalCrisma3),
+              ];
+
+                return SingleChildScrollView(
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    alignment: WrapAlignment.center,
+                    runAlignment: WrapAlignment.center,
+                    children: [
+                      ChartDashboard(inscricoesDashboardModel: listaInscricoesTotaisDashboardModel, titulo: 'Inscrições por turma', modeloGrafico: ModeloChart.donut), // Por turma
+                      ChartDashboard(inscricoesDashboardModel: listaInscricoesEucaristia, titulo: '1º Eucaristia', modeloGrafico: ModeloChart.column), // Eucarista
+                      ChartDashboard(inscricoesDashboardModel: listaInscricoesCrisma, titulo: 'Crisma', modeloGrafico: ModeloChart.column), // Crisma
+                    ],
+                  ),
                 );
               },
             ),

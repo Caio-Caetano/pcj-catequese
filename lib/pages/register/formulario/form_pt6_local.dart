@@ -6,6 +6,8 @@ import 'package:webapp/functions/upload_file.dart';
 import 'package:webapp/providers/loading_notifier.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
+import '../../widgets/stepper.dart';
+
 class FormularioPrefLocal extends StatefulWidget {
   const FormularioPrefLocal({super.key, required this.etapa, required this.onSubmit});
 
@@ -45,6 +47,7 @@ class _FormularioPrefLocalState extends State<FormularioPrefLocal> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
+                              const StepperInscricao(step: 5),
                               const Text(
                                 'Selecione o local de sua PREFERÊNCIA:',
                                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

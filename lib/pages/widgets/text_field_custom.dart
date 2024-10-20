@@ -17,6 +17,7 @@ class TextFieldCustom extends StatefulWidget {
     this.labelColor,
     this.maxLines = 1,
     this.filled = false,
+    this.width,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -36,6 +37,8 @@ class TextFieldCustom extends StatefulWidget {
   final int? maxLines;
 
   final bool? filled;
+
+  final double? width;
 
   @override
   State<TextFieldCustom> createState() => _TextFieldCustomState();
@@ -59,38 +62,41 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
               ),
             ],
           ),
-        TextFormField(
-          controller: widget.controller,
-          inputFormatters: widget.formatter,
-          validator: widget.validator,
-          onChanged: widget.onChanged,
-          readOnly: widget.readOnly,
-          obscureText: widget.isPassword! ? !isObscure : false,
-          obscuringCharacter: '*',
-          maxLines: widget.maxLines,
-          decoration: InputDecoration(
-            filled: widget.filled,
-            fillColor: Colors.white,
-            prefixIcon: widget.iconPrefix,
-            hintText: widget.hintText,
-            hintStyle: Theme.of(context).textTheme.labelLarge,
-            suffixIcon: !widget.isPassword!
-                ? null
-                : IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isObscure = !isObscure;
-                      });
-                    },
-                    icon: isObscure ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
-                  ),
-            enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.black, width: 1), borderRadius: BorderRadius.circular(15)),
-            focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.black, width: 1), borderRadius: BorderRadius.circular(15)),
-            errorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.red, width: 2), borderRadius: BorderRadius.circular(15)),
-            focusedErrorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.red, width: 2), borderRadius: BorderRadius.circular(15)),
-            errorStyle: Theme.of(context).textTheme.labelMedium,
+        SizedBox(
+          width: widget.width,
+          child: TextFormField(
+            controller: widget.controller,
+            inputFormatters: widget.formatter,
+            validator: widget.validator,
+            onChanged: widget.onChanged,
+            readOnly: widget.readOnly,
+            obscureText: widget.isPassword! ? !isObscure : false,
+            obscuringCharacter: '*',
+            maxLines: widget.maxLines,
+            decoration: InputDecoration(
+              filled: widget.filled,
+              fillColor: Colors.white,
+              prefixIcon: widget.iconPrefix,
+              hintText: widget.hintText,
+              hintStyle: Theme.of(context).textTheme.labelLarge,
+              suffixIcon: !widget.isPassword!
+                  ? null
+                  : IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isObscure = !isObscure;
+                        });
+                      },
+                      icon: isObscure ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                    ),
+              enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.black, width: 1), borderRadius: BorderRadius.circular(5)),
+              focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.black, width: 1), borderRadius: BorderRadius.circular(5)),
+              errorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.red, width: 2), borderRadius: BorderRadius.circular(5)),
+              focusedErrorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.red, width: 2), borderRadius: BorderRadius.circular(5)),
+              errorStyle: Theme.of(context).textTheme.labelMedium,
+            ),
           ),
-        ),
+        )
       ],
     );
   }

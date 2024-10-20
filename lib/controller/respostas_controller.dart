@@ -1,11 +1,12 @@
 import 'package:webapp/data/respostas_repository.dart';
+import 'package:webapp/model/inscricao_model.dart';
 import 'package:webapp/model/turma_model.dart';
 
 class RespostasController {
   RespostasController(this._repository);
   final RespostasRepository _repository;
 
-  Future<List<Map<String, dynamic>>> getRespostas({String? etapa, bool? archived}) async => await _repository.getInscricoes(etapa: etapa, archived: archived);
+  Future<List<Map<String, dynamic>>> getRespostas({String? etapa, bool? archived, String? collection}) async => await _repository.getInscricoes(etapa: etapa, archived: archived, collection: collection);
 
   Future<bool> verificaInscricao(String nome, String telefone) async => await _repository.verificaInscricao(nome, telefone);
 
@@ -16,4 +17,6 @@ class RespostasController {
   Future<bool> archiveInscricao(String id, String reason, bool? isArchived) async => await _repository.archiveInscricao(id, reason, isArchived);
 
   Future<List<Map<String, dynamic>>> getInscricoesByTurma(TurmaModel model) async => await _repository.getInscricoesByTurma(model);
+
+  Future<List<Map<String, dynamic>>> inserirInscricao(List<InscricaoModel> models, {String? collection}) async => await _repository.inserirInscricao(models, collection: collection);
 }

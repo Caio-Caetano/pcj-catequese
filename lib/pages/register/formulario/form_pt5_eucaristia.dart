@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:webapp/model/checkbox_model.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
+import '../../widgets/stepper.dart';
+
 class FormularioEucaristia extends StatefulWidget {
   const FormularioEucaristia({super.key, required this.etapa, required this.onSubmit});
 
@@ -38,6 +40,7 @@ class _FormularioEucaristiaState extends State<FormularioEucaristia> {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(children: [
+            const StepperInscricao(step: 4),
             const Text(
               'Você possui a 1º EUCARISTIA?',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

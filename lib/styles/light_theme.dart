@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   useMaterial3: true,
-  textTheme: GoogleFonts.titilliumWebTextTheme(
+  textTheme: GoogleFonts.montserratTextTheme(
     const TextTheme(
       titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
       titleMedium: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.black),

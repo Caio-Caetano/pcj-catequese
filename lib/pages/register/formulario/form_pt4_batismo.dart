@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:webapp/model/checkbox_model.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
+import '../../widgets/stepper.dart';
+
 class FormularioBatismo extends StatefulWidget {
   const FormularioBatismo({super.key, required this.etapa, required this.onSubmit});
 
@@ -39,6 +41,7 @@ class _FormularioBatismoState extends State<FormularioBatismo> {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(children: [
+            const StepperInscricao(step: 4),
             const Text(
               'Você possui BATISMO?',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
