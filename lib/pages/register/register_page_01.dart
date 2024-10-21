@@ -6,11 +6,13 @@ import 'package:webapp/functions/classes/separete.dart';
 import 'package:webapp/functions/validators/date_validator.dart';
 import 'package:webapp/model/inscricao_model.dart';
 import 'package:webapp/pages/widgets/appbar_custom.dart';
+import 'package:webapp/pages/widgets/stepper.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
 class RegisterCatechized extends StatelessWidget {
-  const RegisterCatechized({super.key, required this.onSubmit, required this.onClose});
+  const RegisterCatechized(
+      {super.key, required this.onSubmit, required this.onClose});
 
   final Function(Turma) onSubmit;
   final VoidCallback onClose;
@@ -19,7 +21,8 @@ class RegisterCatechized extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController controller = TextEditingController();
 
-    var maskFormatter = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
+    var maskFormatter = MaskTextInputFormatter(
+        mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
 
     final inscricaoProvider = Provider.of<InscricaoProvider>(context);
 
@@ -37,7 +40,7 @@ class RegisterCatechized extends StatelessWidget {
               children: [
                 Icon(Icons.arrow_back_ios, color: Colors.black),
                 SizedBox(width: 5.0),
-                Text('Voltar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                Text('Voltar', style:TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               ],
             ),
           ),
@@ -51,6 +54,8 @@ class RegisterCatechized extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                const StepperInscricao(step: 0),
+                const Spacer(),
                 const Text(
                   'Digite a data de nascimento:',
                   style: TextStyle(
@@ -60,15 +65,20 @@ class RegisterCatechized extends StatelessWidget {
                 ),
                 TextFieldCustom(
                   controller: controller,
-                  validator: (value) => checkDate(maskFormatter.getMaskedText()),
+                  validator: (value) =>
+                      checkDate(maskFormatter.getMaskedText()),
                   formatter: [maskFormatter],
+                  width: 600,
                 ),
-                const Text('Para pessoas batizadas é obrigatório anexar o Batistério ao final da inscrição',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontStyle: FontStyle.italic,
-                    )),
+                const Text(
+                  'Para pessoas batizadas é obrigatório anexar o Batistério ao final da inscrição',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const Spacer(),
               ],
             ),
           ),
@@ -90,14 +100,21 @@ class RegisterCatechized extends StatelessWidget {
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.yellow,
                   margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
-                  content: Text('⚠️ Entre em contato com a coordenação. Idade inválida.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  content: Text(
+                      '⚠️ Entre em contato com a coordenação. Idade inválida.',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black)),
                 ),
               );
             }
           }
         },
-        label: const Text('Avançar', style: TextStyle(fontWeight: FontWeight.bold)),
+        label: const Text('Avançar',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         icon: const Icon(Icons.forward),
         tooltip: 'Avançar',
       ),

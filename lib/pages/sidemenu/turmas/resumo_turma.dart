@@ -91,9 +91,9 @@ class _ViewDetalhesTurmaState extends State<ViewDetalhesTurma> {
                             onTap: () => showDialog(context: context, builder: (context) => _ShowDialogEdit(snapshot.data!.etapa!, snapshot.data!.catequistas, snapshot.data!.local, snapshot.data!.id!)).then(
                               (value) {
                                 if (value == null || value == false) {
-                                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Editado com sucesso!'));
+                                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Editado com sucesso!'));
                                   setState(() {});
                                 }
                               },
@@ -129,10 +129,10 @@ class _ViewDetalhesTurmaState extends State<ViewDetalhesTurma> {
                                         ),
                                       ))).then((value) async {
                                 if (value != null && meses.contains(value)) {
-                                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Criando lista de presença...'));
+                                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Criando lista de presença...'));
                                   await exportListaPresenca(widget.inscricoes.map((element) => element['nome'] as String).toList(), value);
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
                                 }
                               });
                             },
@@ -323,7 +323,9 @@ class __ShowDialogEditState extends State<_ShowDialogEdit> {
           textButton: 'Editar',
           onTap: () async {
             if (key.currentState!.validate()) {
-              await turmaController.updateTurma(widget.turmaId, local: local, catequistas: catequistas).then((value) => Navigator.pop(context, true));
+              await turmaController.updateTurma(widget.turmaId, local: local, catequistas: catequistas).then((value) {
+                if (context.mounted) Navigator.pop(context, true);
+              });
             }
           },
           color: const Color.fromARGB(255, 108, 212, 111),
@@ -373,12 +375,14 @@ class __ShowDialogRemoveState extends State<_ShowDialogRemove> {
                       ),
                     ).then((value) async {
                       if (value == null || !value) {
-                        ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                        if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
                       } else {
                         await turmaController.removeCatequistaCadastrado(widget.turmaId, catequista).then(
                           (value) {
                             setState(() {});
-                            return ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Deletado com sucesso.'));
+                            if (context.mounted) {
+                              return ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Deletado com sucesso.'));
+                            }
                           },
                         );
                       }

@@ -5,7 +5,8 @@ import 'package:webapp/functions/create_excel.dart';
 // import 'package:webapp/pages/admin/insert_page/individual_page.dart';
 // import 'package:webapp/pages/sidemenu/respostas/admin/insert_manually_dialog.dart';
 import 'package:webapp/pages/sidemenu/respostas/list.dart';
-import 'package:webapp/pages/widgets/dropdown_custom.dart';
+import 'package:webapp/pages/widgets/select_ano.dart';
+import 'package:webapp/pages/widgets/badge_filtro.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 
 class RepostasPageView extends StatefulWidget {
@@ -18,7 +19,8 @@ class RepostasPageView extends StatefulWidget {
 }
 
 class _RepostasPageViewState extends State<RepostasPageView> {
-  RespostasController controllerRespostas = RespostasController(RespostasRepository());
+  RespostasController controllerRespostas =
+      RespostasController(RespostasRepository());
   TextEditingController controllerSearch = TextEditingController();
 
   List<Map<String, dynamic>> inscricoes = [];
@@ -32,22 +34,23 @@ class _RepostasPageViewState extends State<RepostasPageView> {
   List<String> etapasUnicas = [];
 
   String? etapaTotalFiltro;
-  List<DropdownMenuItem<String>> etapaMenu = const [
-    DropdownMenuItem(value: 'Eucaristia', child: Text('Eucarista', style: TextStyle(fontSize: 14))),
-    DropdownMenuItem(value: 'Crisma', child: Text('Crisma', style: TextStyle(fontSize: 14))),
-    DropdownMenuItem(value: 'Jovens', child: Text('Jovens', style: TextStyle(fontSize: 14))),
-    DropdownMenuItem(value: 'Adultos', child: Text('Adultos', style: TextStyle(fontSize: 14))),
+  List<String> etapaMenu = [
+    'Todos',
+    'Eucaristia',
+    'Crisma',
+    'Jovens',
+    'Adultos'
   ];
 
   String? turmaAtribuida;
-  List<DropdownMenuItem<String>> turmaMenu = const [
-    DropdownMenuItem(value: 'Todos', child: Text('Todos', style: TextStyle(fontSize: 14))),
-    DropdownMenuItem(value: 'Sim', child: Text('Sim', style: TextStyle(fontSize: 14))),
-    DropdownMenuItem(value: 'Não', child: Text('Não', style: TextStyle(fontSize: 14))),
-  ];
+  List<String> turmaMenu = ['Todos', 'Sim', 'Não'];
 
-  Future<List<Map<String, dynamic>>> getInscricoes() async {
-    duplicateItems = await controllerRespostas.getRespostas(etapa: widget.etapa);
+  List<Widget> filtroBadges = [];
+
+  Future<List<Map<String, dynamic>>> getInscricoes(
+      {String? queryPesquisando, String? collection}) async {
+    duplicateItems = await controllerRespostas.getRespostas(
+        etapa: widget.etapa, collection: collection);
 
     inscricoes = duplicateItems.where((e) {
       // Verifica se está selecionado a ETAPA (Eucaristia, Crisma, Jovens ou Adultos)
@@ -59,7 +62,8 @@ class _RepostasPageViewState extends State<RepostasPageView> {
       if (etapaFiltro != null) {
         // Verifica se possui LOCAL também selecionado
         if (localFiltro != null) {
-          return e['etapa'].contains(etapaFiltro) && e['local'].contains(localFiltro);
+          return e['etapa'].contains(etapaFiltro) &&
+              e['local'].contains(localFiltro);
         }
         return e['etapa'].contains(etapaFiltro);
       }
@@ -79,39 +83,159 @@ class _RepostasPageViewState extends State<RepostasPageView> {
 
   @override
   void initState() {
+    super.initState();
     getInscricoes().whenComplete(() => setState(() {
           isLoading = false;
-          inscricoes = duplicateItems;
-          for (var inscricao in duplicateItems) {
-            if (inscricao['local'] != null) {
-              if (!locaisUnicos.contains(inscricao['local'])) {
-                locaisUnicos.add(inscricao['local']);
-              }
-            }
-            if (!etapasUnicas.contains(inscricao['etapa'])) {
-              etapasUnicas.add(inscricao['etapa']);
-            }
-          }
+          handleFiltros();
         }));
-    super.initState();
+  }
+
+  // Pega os locais e etapas registradas nas inscrições e volta apenas 1 de cada.
+  void handleFiltros() {
+    // Limpa as variaveis
+    filtroBadges = [];
+    locaisUnicos = [];
+    etapasUnicas = [];
+
+    inscricoes = duplicateItems;
+    locaisUnicos.add('Todos');
+    etapasUnicas.add('Todos');
+    for (var inscricao in duplicateItems) {
+      if (inscricao['local'] != null) {
+        if (!locaisUnicos.contains(inscricao['local'])) {
+          locaisUnicos.add(inscricao['local']);
+        }
+      }
+      if (!etapasUnicas.contains(inscricao['etapa'])) {
+        etapasUnicas.add(inscricao['etapa']);
+      }
+    }
+
+    filtroBadges.addAll([
+      BadgeFiltro(
+          items: etapaMenu,
+          hintText: 'Etapa',
+          selectedItem: etapaTotalFiltro,
+          onChange: (value) {
+            setState(() {
+              etapaTotalFiltro = value == 'Todos' ? null : value;
+              etapaFiltro = null;
+              localFiltro = null;
+              turmaAtribuida = null;
+            });
+            filtrar({
+              'etapa': etapaFiltro,
+              'local': localFiltro,
+              'etapaTotal': etapaTotalFiltro,
+              'turma': turmaAtribuida,
+            });
+          }),
+      BadgeFiltro(
+          items: etapasUnicas,
+          hintText: 'Etapa Detalhada',
+          selectedItem: etapaFiltro,
+          onChange: (value) {
+            setState(() {
+              etapaFiltro = value == 'Todos' ? null : value;
+              etapaTotalFiltro = null;
+            });
+            filtrar({
+              'etapa': etapaFiltro,
+              'local': localFiltro,
+              'etapaTotal': etapaTotalFiltro,
+              'turma': turmaAtribuida,
+            });
+          }),
+      BadgeFiltro(
+          items: locaisUnicos,
+          hintText: 'Local',
+          selectedItem: localFiltro,
+          onChange: (value) {
+            setState(() {
+              localFiltro = value == 'Todos' ? null : value;
+              etapaTotalFiltro = null;
+            });
+            filtrar({
+              'etapa': etapaFiltro,
+              'local': localFiltro,
+              'etapaTotal': etapaTotalFiltro,
+              'turma': turmaAtribuida,
+            });
+          }),
+      BadgeFiltro(
+          items: turmaMenu,
+          hintText: 'Turma Atribuida',
+          selectedItem: turmaAtribuida,
+          onChange: (value) {
+            setState(() {
+              turmaAtribuida = value;
+            });
+            filtrar({
+              'etapa': etapaFiltro,
+              'local': localFiltro,
+              'etapaTotal': etapaTotalFiltro,
+              'turma': turmaAtribuida,
+            });
+          }),
+    ]);
+  }
+
+  void filtrar(Map<String, dynamic> value) {
+    inscricoes = duplicateItems.where((e) {
+      // Filtrar por 'etapa' se não for nulo, verificando correspondência exata
+      bool etapaMatches = value['etapa'] == null || e['etapa'] == value['etapa'];
+      
+      // Filtrar por 'etapaTotal' se não for nulo, permitindo correspondência parcial
+      bool etapaTotalMatches = value['etapaTotal'] == null ||
+          (e['etapa'] != null && e['etapa'].contains(value['etapaTotal']));
+
+      // Filtrar por 'local' se não for nulo
+      bool localMatches = value['local'] == null || e['local'] == value['local'];
+
+      return etapaMatches && etapaTotalMatches && localMatches;
+    }).toList();
+
+    if (value['turma'] != null) {
+      inscricoes = inscricoes.where((e) {
+        if (value['turma'] == 'Sim') {
+          return e['turma'] != null && e['turma']['catequistas'].isNotEmpty;
+        } else if (value['turma'] == 'Não') {
+          return e['turma'] == null || e['turma']['catequistas'].isEmpty;
+        }
+        return true; // Se "Todos" ou nenhuma opção, retorna verdadeiro
+      }).toList();
+    }
+
+    setState(() {});
   }
 
   void filterSearchResults(String query) {
     setState(() {
-      inscricoes = duplicateItems.where((item) => item['nome'].toLowerCase().contains(query.toLowerCase())).toList();
+      inscricoes = duplicateItems
+          .where((item) =>
+              item['nome'].toLowerCase().contains(query.toLowerCase()))
+          .toList();
     });
+  }
+
+  String anoSelecionado = '';
+
+  void onChangeAno(String value) async {
+    await getInscricoes(collection: value).then((_) {
+      handleFiltros();
+    });
+    anoSelecionado = value;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    inscricoes.sort((a, b) => b['dataInscricao'].compareTo(a['dataInscricao']));
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: TextFieldCustom(
@@ -124,168 +248,38 @@ class _RepostasPageViewState extends State<RepostasPageView> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Filtro'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (widget.etapa == null) Text('Etapa', style: Theme.of(context).textTheme.bodyMedium),
-                              if (widget.etapa == null)
-                                DropdownButtonCustom(
-                                  value: etapaTotalFiltro,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      etapaFiltro = null;
-                                      localFiltro = null;
-                                      turmaAtribuida = null;
-                                      etapaTotalFiltro = newValue!;
-                                    });
-                                  },
-                                  items: etapaMenu,
-                                ),
-                              Padding(padding: const EdgeInsets.only(top: 12.0), child: Container(height: 3, width: 50, color: Colors.red)),
-                              Text('Etapa detalhada', style: Theme.of(context).textTheme.bodyMedium),
-                              DropdownButtonCustom(
-                                value: etapaFiltro,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    etapaFiltro = newValue!;
-                                    etapaTotalFiltro = null;
-                                  });
-                                },
-                                items: etapasUnicas.map<DropdownMenuItem<String>>((e) => DropdownMenuItem<String>(value: e, child: Text(e, style: const TextStyle(fontSize: 14)))).toList(),
-                              ),
-                              Text('Local', style: Theme.of(context).textTheme.bodyMedium),
-                              DropdownButtonCustom(
-                                value: localFiltro,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    localFiltro = newValue!;
-                                    etapaTotalFiltro = null;
-                                  });
-                                },
-                                items: locaisUnicos.map<DropdownMenuItem<String>>((e) => DropdownMenuItem<String>(value: e, child: Text(e, style: const TextStyle(fontSize: 14)))).toList(),
-                              ),
-                              Padding(padding: const EdgeInsets.only(top: 12.0), child: Container(height: 3, width: 50, color: Colors.red)),
-                              DropdownButtonCustom(
-                                label: 'Turma atribuída',
-                                value: turmaAtribuida,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    turmaAtribuida = newValue;
-                                  });
-                                },
-                                items: turmaMenu,
-                              ),
-                            ],
-                          ),
-                          actionsAlignment: MainAxisAlignment.center,
-                          actions: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: ElevatedButton(onPressed: () => Navigator.pop(context, {'etapa': etapaFiltro, 'local': localFiltro, 'etapaTotal': etapaTotalFiltro, 'turma': turmaAtribuida}), child: const Text('Filtrar')),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: ElevatedButton(onPressed: () => Navigator.pop(context, 'Limpar'), child: const Text('Limpar')),
-                            ),
-                          ],
-                        );
-                      },
-                    ).then(
-                      (value) => setState(
-                        () {
-                          value ??= 'Limpar';
-                          if (value != 'Limpar') {
-                            inscricoes = duplicateItems.where((e) {
-                              // Verifica se está selecionado a ETAPA (Eucaristia, Crisma, Jovens ou Adultos)
-                              if (value['etapaTotal'] != null) {
-                                return e['etapa'].contains(value['etapaTotal']);
-                              }
-
-                              // Verifica se está selecionado a ETAPA ESPECÍFICA
-                              if (value['etapa'] != null) {
-                                // Verifica se possui LOCAL também selecionado
-                                if (value['local'] != null) {
-                                  return e['etapa'].contains(value['etapa']) && e['local'].contains(value['local']);
-                                }
-                                return e['etapa'].contains(value['etapa']);
-                              }
-
-                              // Verifica se apenas o LOCAL está selecionado
-                              if (value['local'] != null) {
-                                return e['local'] == value['local'];
-                              }
-
-                              // Retorna false como ERRO
-                              return false;
-                            }).toList();
-
-                            // Última verificação para saber se está com TURMA ou NÃO
-                            if (value['turma'] != null) {
-                              if (inscricoes.isNotEmpty) {
-                                if (value['turma'] == 'Sim') {
-                                  inscricoes = inscricoes.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
-                                } else if (value['turma'] == 'Não') {
-                                  inscricoes = inscricoes.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
-                                } else {
-                                  inscricoes = inscricoes;
-                                }
-                              } else {
-                                if (value['turma'] == 'Sim') {
-                                  inscricoes = duplicateItems.where((e) => e['turma'] != null && e['turma']['catequistas'].isNotEmpty).toList();
-                                } else if (value['turma'] == 'Não') {
-                                  inscricoes = duplicateItems.where((e) => e['turma'] == null || e['turma']['catequistas'].isEmpty).toList();
-                                } else {
-                                  inscricoes = duplicateItems;
-                                }
-                              }
-                            }
-                          } else {
-                            etapaFiltro = null;
-                            localFiltro = null;
-                            etapaTotalFiltro = null;
-                            turmaAtribuida = null;
-                            inscricoes = duplicateItems;
-                          }
-                        },
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(100, 74, 74, 74)),
-                    child: Image.asset('./assets/images/filter.png', width: 30),
-                  ),
-                ),
+                SelectAno(onChange: onChangeAno),
                 const SizedBox(width: 10),
                 InkWell(
                   onTap: () async => await exportToExcel(inscricoes),
                   child: Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(255, 140, 235, 143)),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: const Color.fromARGB(255, 140, 235, 143)),
                     child: Image.asset('./assets/images/excel.png', width: 30),
                   ),
                 ),
               ],
             ),
-            if (isLoading) const Text('Carregando...'),
-            criarListaInscricoes(
-              inscricoes,
-              () async => await getInscricoes().then(
-                (value) => setState(
-                  () {
-                    inscricoes = value;
-                  },
-                ),
+            const SizedBox(height: 10),
+            if (filtroBadges.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Wrap(spacing: 10, runSpacing: 10, runAlignment: WrapAlignment.center, children: filtroBadges),
               ),
-              widget.accessLevel,
-            ),
+            if (isLoading)
+              const Center(child: Text('Carregando...'))
+            else
+              Expanded(
+                  child: ListaDeInscricoes(
+                      inscricoes: inscricoes,
+                      accessLevel: widget.accessLevel,
+                      anoSelecionado: anoSelecionado,
+                      callback: () async => {
+                          await getInscricoes().then((_) => setState((){}))
+                        },
+                      )),
           ],
         ),
       ),

@@ -5,6 +5,8 @@ import 'package:search_cep/search_cep.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
+import '../../widgets/stepper.dart';
+
 class FormularioEndereco extends StatefulWidget {
   const FormularioEndereco({super.key, required this.etapa, required this.onSubmit});
 
@@ -46,6 +48,7 @@ class _FormularioEnderecoState extends State<FormularioEndereco> {
             key: key,
             child: Column(
               children: [
+                const StepperInscricao(step: 2),
                 TextFieldCustom(
                   controller: cepController,
                   formatter: [maskFormatter],

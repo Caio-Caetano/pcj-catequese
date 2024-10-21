@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/model/inscricao_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoadingClass extends ChangeNotifier {
   bool _loading = false;
@@ -14,6 +15,8 @@ class LoadingClass extends ChangeNotifier {
     notifyListeners();
   }
 
+  var colInscricao = dotenv.env['INSCRICAO'] ?? '';
+
   Future<Map<String, dynamic>> addInscricao(InscricaoModel model) async {
     _loading = true;
     notifyListeners();
@@ -21,8 +24,7 @@ class LoadingClass extends ChangeNotifier {
     RespostasController controllerRespostas = RespostasController(RespostasRepository());
     var response = await controllerRespostas.verificaInscricao(model.nome!, model.telefone!);
     if (response) {
-      CollectionReference inscricoes = FirebaseFirestore.instance.collection('inscricoes');
-      // CollectionReference inscricoes = FirebaseFirestore.instance.collection('testes');
+      CollectionReference inscricoes = FirebaseFirestore.instance.collection(colInscricao);
       return await inscricoes.add(model.toMap()).then((value) {
         _loading = false;
         notifyListeners();

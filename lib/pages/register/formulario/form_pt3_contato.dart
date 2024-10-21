@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
+import '../../widgets/stepper.dart';
+
 class FormularioContato extends StatelessWidget {
   const FormularioContato({super.key, required this.etapa, required this.onSubmit});
 
@@ -34,6 +36,7 @@ class FormularioContato extends StatelessWidget {
             child: Wrap(
               runSpacing: 20,
               children: [
+                const StepperInscricao(step: 3),
                 TextFieldCustom(
                   controller: telefoneController,
                   labelText: 'Telefone:',

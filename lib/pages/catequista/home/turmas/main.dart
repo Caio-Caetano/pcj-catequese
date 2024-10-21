@@ -153,10 +153,10 @@ class __DetalhesTurmaState extends State<_DetalhesTurma> {
                                         ),
                                       ))).then((value) async {
                                 if (value != null && meses.contains(value)) {
-                                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Criando lista de presença...'));
+                                  if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Criando lista de presença...'));
                                   await exportListaPresenca(widget.inscricoes.map((element) => element['nome'] as String).toList(), value);
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                                  if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
                                 }
                               });
                             },

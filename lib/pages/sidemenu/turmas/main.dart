@@ -58,10 +58,10 @@ class _TurmasPageViewState extends State<TurmasPageView> {
           ).then(
             (value) async {
               if (value == null || !value) {
-                ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
               } else {
                 if (valueNotifier.value == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Informações inválidas.'));
+                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Informações inválidas.'));
                 } else {
                   await turmaController.addTurma(valueNotifier.value!).then((value) => setState(() {}));
                 }

@@ -20,8 +20,8 @@ class LoginPage extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFFFFE0E0),
-            Color(0xFFFFCCCC),
+            Color(0xFFFDECEC),
+            Color(0xFFFCE3E3),
           ],
         ),
       ),
@@ -88,7 +88,7 @@ class LoginPage extends StatelessWidget {
                                   InkWell(
                                     borderRadius: const BorderRadius.all(Radius.circular(35.0)),
                                     onTap: () async {
-                                      await launch('https://www.paroquiacoracaodejesus.org.br/', isNewTab: false);
+                                      await launch('https://www.instagram.com/coracaodejesussjc/', isNewTab: false);
                                     },
                                     child: ContainerShadowCustom(
                                       height: 140,
@@ -97,7 +97,7 @@ class LoginPage extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Image.asset('./assets/icons/website.png', height: 80, width: 80),
-                                          const Text('Site', style: TextStyle(color: Color(0xFF570808), fontSize: 20, fontWeight: FontWeight.w300)),
+                                          const Text('Instagram', style: TextStyle(color: Color(0xFF570808), fontSize: 20, fontWeight: FontWeight.w300)),
                                         ],
                                       ),
                                     ),

@@ -40,10 +40,14 @@ class PopUpMensagemFechado extends StatelessWidget {
                         elevation: 8,
                         content: Text('Carregando...'),
                       ));
-                      await configController.updateMensagemFechado(mensagemController.text.trim()).then((value) => Navigator.pop(context));
+                      await configController.updateMensagemFechado(mensagemController.text.trim()).then((value) {
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      });
                     }
                   },
-                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.red)),
+                  style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
                   child: const Text('Editar', style: TextStyle(color: Colors.white)),
                 )
               ],

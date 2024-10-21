@@ -4,6 +4,8 @@ import 'package:webapp/model/inscricao_model.dart';
 import 'package:webapp/pages/widgets/text_field_custom.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
 
+import '../../widgets/stepper.dart';
+
 class FormularioNomes extends StatelessWidget {
   const FormularioNomes({super.key, required this.etapa, required this.onSubmit});
 
@@ -34,6 +36,7 @@ class FormularioNomes extends StatelessWidget {
             child: Wrap(
               runSpacing: 20,
               children: [
+                const StepperInscricao(step: 1),
                 TextFieldCustom(
                   controller: nomeController,
                   labelText: 'Nome:',

@@ -60,12 +60,17 @@ Widget cardArchived({required Map<String, dynamic> inscricao, required BuildCont
                               archiving: false,
                               onSubmit: (reason) async {
                                 await controller.archiveInscricao(inscricao['id'], reason, inscricao['archived'] == null ? false : inscricao['archived']['isNowArchived']).then((value) {
-                                  Navigator.pop(context, value);
+                                  if (context.mounted) Navigator.pop(context, value);
                                   setstate();
                                 });
                               },
                             );
-                          }).then((value) => value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('📁 Restaurado com sucesso.')));
+                          }).then((value) {
+                            if (context.mounted) {
+                              return value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('📁 Restaurado com sucesso.'));
+
+                            }
+                          });
                     },
                     icon: const Icon(Icons.unarchive, color: Colors.blueGrey),
                   ),
@@ -82,7 +87,11 @@ Widget cardArchived({required Map<String, dynamic> inscricao, required BuildCont
                                   setstate();
                                 },
                                 back: () => Navigator.pop(context, false));
-                          }).then((value) => value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!')));
+                          }).then((value) {
+                            if (context.mounted) {
+                              return value == null || !value ? ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.')) : ScaffoldMessenger.of(context).showSnackBar(createSnackBar('❌ Deletado com sucesso!'));
+                            }
+                          });
                     },
                     icon: const Icon(Icons.delete_forever, color: Colors.red),
                   ),

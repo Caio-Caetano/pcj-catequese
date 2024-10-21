@@ -2,6 +2,7 @@ import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class InscricaoModel {
+  String? id;
   String? dataInscricao;
 
   String? dataNascimento;
@@ -22,8 +23,13 @@ class InscricaoModel {
   Map<String, dynamic>? eucaristia;
 
   String? local;
+
+  Map<String, dynamic>? archived;
+
+  bool selected = false;
   
   InscricaoModel({
+    this.id,
     this.dataInscricao,
     this.dataNascimento,
     this.idade,
@@ -38,15 +44,17 @@ class InscricaoModel {
     this.batismo,
     this.eucaristia,
     this.local,
+    this.archived,
   });
 
   @override
   String toString() {
-    return 'InscricaoModel(dataInscricao: $dataInscricao dataNascimento: $dataNascimento, idade: $idade, etapa: $etapa, nome: $nome, nomeMae: $nomeMae, nomePai: $nomePai, nomeResponsavel: $nomeResponsavel, endereco: $endereco, telefone: $telefone, email: $email, batismo: $batismo, eucaristia: $eucaristia, local: $local)';
+    return 'InscricaoModel(id: $id, dataInscricao: $dataInscricao dataNascimento: $dataNascimento, idade: $idade, etapa: $etapa, nome: $nome, nomeMae: $nomeMae, nomePai: $nomePai, nomeResponsavel: $nomeResponsavel, endereco: $endereco, telefone: $telefone, email: $email, batismo: $batismo, eucaristia: $eucaristia, local: $local)';
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'dataInscricao': dataInscricao,
       'dataNascimento': dataNascimento,
       'idade': idade,
@@ -61,11 +69,13 @@ class InscricaoModel {
       'batismo': batismo,
       'eucaristia': eucaristia,
       'local': local,
+      'archived': archived
     };
   }
 
   factory InscricaoModel.fromMap(Map<String, dynamic> map) {
     return InscricaoModel(
+      id: map['id'],
       dataInscricao: map['dataInscricao'] != null ? map['dataInscricao'] as String : null,
       dataNascimento: map['dataNascimento'] != null ? map['dataNascimento'] as String : null,
       idade: map['idade'] != null ? map['idade'] as String : null,
@@ -74,16 +84,21 @@ class InscricaoModel {
       nomeMae: map['nomeMae'] != null ? map['nomeMae'] as String : null,
       nomePai: map['nomePai'] != null ? map['nomePai'] as String : null,
       nomeResponsavel: map['nomeResponsavel'] != null ? map['nomeResponsavel'] as String : null,
-      endereco: map['endereco'] != null ? Map<String, String>.from((map['endereco'] as Map<String, String>)) : null,
+      endereco: map['endereco'] != null ? Map<String, String>.from(map['endereco']) : null,
       telefone: map['telefone'] != null ? map['telefone'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
-      batismo: map['batismo'] != null ? Map<String, dynamic>.from((map['batismo'] as Map<String, dynamic>)) : null,
-      eucaristia: map['eucaristia'] != null ? Map<String, dynamic>.from((map['eucaristia'] as Map<String, dynamic>)) : null,
+      batismo: map['batismo'] != null ? Map<String, dynamic>.from(map['batismo']) : null,
+      eucaristia: map['eucaristia'] != null ? Map<String, dynamic>.from(map['eucaristia']) : null,
       local: map['local'] != null ? map['local'] as String : null,
+      archived: map['archived'] != null ? Map<String, dynamic>.from(map['archived']) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory InscricaoModel.fromJson(String source) => InscricaoModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  static List<InscricaoModel> fromMapList(List<Map<String, dynamic>> maps) {
+    return maps.map((map) => InscricaoModel.fromMap(map)).toList();
+  } 
 }
