@@ -62,7 +62,7 @@ class CustomPagerState extends State<CustomPager> {
     // skip this build pass
     if (!widget.controller.isAttached) return const SizedBox();
     return Container(
-      width: 220,
+      width: 300,
       height: 40,
       decoration: BoxDecoration(
         color: Colors.grey[850],

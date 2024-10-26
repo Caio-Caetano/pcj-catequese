@@ -30,6 +30,8 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
     'etapa',
     'arquivado',
     'arquivado-motivo',
+    'adulto-estado-civil',
+    'adulto-casar-paroquia'
   ];
 
   for (var i = 0; i < headers.length; i++) {
@@ -52,6 +54,10 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
             flag = headers.indexOf('arquivado-motivo');
           } else if (key == 'isNowArchived') {
             flag = headers.indexOf('arquivado');
+          } else if (key == 'estado-civil') {
+            flag = headers.indexOf('adulto-estado-civil');
+          } else if (key == 'casamento-paroquia') {
+            flag = headers.indexOf('adulto-casar-paroquia');
           } else {
             flag = headers.indexOf('$parent-$key');
           }

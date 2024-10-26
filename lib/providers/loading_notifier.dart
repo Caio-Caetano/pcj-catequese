@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/model/inscricao_model.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoadingClass extends ChangeNotifier {
   bool _loading = false;
@@ -15,7 +14,7 @@ class LoadingClass extends ChangeNotifier {
     notifyListeners();
   }
 
-  var colInscricao = dotenv.env['INSCRICAO'] ?? '';
+  var colInscricao = 'inscricoes2025';
 
   Future<Map<String, dynamic>> addInscricao(InscricaoModel model) async {
     _loading = true;

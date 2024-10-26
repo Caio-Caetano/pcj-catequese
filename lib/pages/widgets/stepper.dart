@@ -26,33 +26,38 @@ class StepperInscricao extends StatelessWidget {
         lineWidth: 10,
         unreachedLineType: LineType.dashed,
       ),
-      steps: const [
-          EasyStep(
+      steps: [
+          const EasyStep(
             icon: Icon(Icons.calendar_today_rounded),
             title: 'Nascimento',
             enabled: false,
           ),
-          EasyStep(
+          const EasyStep(
             icon: Icon(Icons.group_rounded),
             title: 'Nomes',
             enabled: false,
           ),
-          EasyStep(
+          const EasyStep(
             icon: Icon(Icons.map_rounded),
             title: 'Endereço',
             enabled: false,
           ),
-          EasyStep(
+          const EasyStep(
             icon: Icon(Icons.contact_mail_rounded),
             title: 'Contato',
             enabled: false,
           ),
-          EasyStep(
+          const EasyStep(
             icon: Icon(Icons.file_present_rounded),
-            title: 'Batismo | Eucaristia',
+            title: 'Batismo\nEucaristia',
             enabled: false,
           ),
-          EasyStep(
+          if (step == 6) const EasyStep(
+            icon: Icon(Icons.add_box_outlined),
+            title: 'Adicional',
+            enabled: false,
+          ),
+          const EasyStep(
             icon: Icon(Icons.pin_drop_rounded),
             title: 'Local',
             enabled: false,

@@ -266,7 +266,7 @@ class _RepostasPageViewState extends State<RepostasPageView> {
             if (filtroBadges.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: Wrap(spacing: 10, runSpacing: 10, runAlignment: WrapAlignment.center, children: filtroBadges),
+                child: Wrap(spacing: 10, runSpacing: 10, alignment: WrapAlignment.center, runAlignment: WrapAlignment.center, children: filtroBadges),
               ),
             if (isLoading)
               const Center(child: Text('Carregando...'))

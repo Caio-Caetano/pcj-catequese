@@ -26,6 +26,8 @@ class InscricaoModel {
 
   Map<String, dynamic>? archived;
 
+  Map<String, dynamic>? addAdulto;
+
   bool selected = false;
   
   InscricaoModel({
@@ -45,6 +47,7 @@ class InscricaoModel {
     this.eucaristia,
     this.local,
     this.archived,
+    this.addAdulto,
   });
 
   @override
@@ -69,7 +72,8 @@ class InscricaoModel {
       'batismo': batismo,
       'eucaristia': eucaristia,
       'local': local,
-      'archived': archived
+      'archived': archived,
+      'addAdulto': addAdulto
     };
   }
 
@@ -91,6 +95,7 @@ class InscricaoModel {
       eucaristia: map['eucaristia'] != null ? Map<String, dynamic>.from(map['eucaristia']) : null,
       local: map['local'] != null ? map['local'] as String : null,
       archived: map['archived'] != null ? Map<String, dynamic>.from(map['archived']) : null,
+      addAdulto: map['addAdulto'] != null ? Map<String, dynamic>.from(map['addAdulto']) : null,
     );
   }
 

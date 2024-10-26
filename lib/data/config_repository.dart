@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ConfigRepository {
   Future<Map<String, dynamic>> getFormAberto() async {
-    // var configFormAberto = await FirebaseFirestore.instance.collection('configs').doc('configs').get();
-    var configFormAberto = await FirebaseFirestore.instance.collection('configs').doc('teste').get();
+    var configFormAberto = await FirebaseFirestore.instance.collection('configs').doc('configs').get();
+    // var configFormAberto = await FirebaseFirestore.instance.collection('configs').doc('teste').get();
     Map<String, dynamic>? retorno = configFormAberto.data();
     return retorno ?? {};
   }

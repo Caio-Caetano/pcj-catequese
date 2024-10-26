@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:webapp/model/inscricao_model.dart';
 import 'package:webapp/model/turma_model.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RespostasRepository {
   var fireInstance = FirebaseFirestore.instance;
-  var colInscricao = dotenv.env['INSCRICAO'] ?? '';
+  var colInscricao = 'inscricoes2025';
 
   Future<List<Map<String, dynamic>>> _getAllInscricoes(
       {String? collection}) async {

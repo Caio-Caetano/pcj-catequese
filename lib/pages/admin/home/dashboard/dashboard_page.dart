@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/data/respostas_repository.dart';
 import 'package:webapp/enums.dart';
@@ -16,7 +15,7 @@ class DashboardAdminPage extends StatefulWidget {
 }
 
 class _DashboardAdminPageState extends State<DashboardAdminPage> {
-  String anoSelecionado = dotenv.env['INSCRICAO'] ?? '';
+  String anoSelecionado = 'inscricoes2025';
 
   @override
   Widget build(BuildContext context) {

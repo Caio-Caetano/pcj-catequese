@@ -229,10 +229,10 @@ class _ListaDeInscricoesState extends State<ListaDeInscricoes> {
           selectedRows.every((i) => i.etapa == primeiraEtapa);
 
       final collSelected = widget.anoSelecionado == ''
-          ? dotenv.env['INSCRICAO']
+          ? 'inscricoes2025'
           : widget.anoSelecionado;
 
-      if (todasMesmasEtapas && collSelected == dotenv.env['INSCRICAO']) {
+      if (todasMesmasEtapas && collSelected == 'inscricoes2025') {
         // Adicione o widget desejado
         actions.add(
           FutureBuilder(
@@ -411,8 +411,7 @@ class _ListaDeInscricoesState extends State<ListaDeInscricoes> {
             onSort: (columnIndex, ascending) =>
                 sort<String>((i) => i.etapa ?? '', columnIndex, ascending),
           ),
-          const DataColumn2(
-            size: ColumnSize.S,
+          const DataColumn(
             label: Padding(
               padding: EdgeInsets.all(8.0),
               child: Text('Ações'),

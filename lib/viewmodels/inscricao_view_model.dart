@@ -60,4 +60,9 @@ class InscricaoProvider with ChangeNotifier {
     _inscricaoInfo.dataInscricao = dataInscricao;
     notifyListeners();
   }
+
+  void updateAdicionalAdulto(Map<String, dynamic>? addAdulto) {
+    _inscricaoInfo.addAdulto = addAdulto;
+    notifyListeners();
+  }
 }

@@ -57,7 +57,7 @@ class LoginPage extends StatelessWidget {
                                 if (open)
                                   const Text('Nova inscrição', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF570808), fontSize: 36))
                                 else
-                                  const Text('Inscrições fechadas', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF570808), fontSize: 36)),
+                                  const Text('Inscrições fechadas', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF570808), fontSize: 36), textAlign: TextAlign.center),
                               ],
                             ),
                           ),

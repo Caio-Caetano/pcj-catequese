@@ -57,4 +57,4 @@ flutter:
     - assets/lottie/
     - assets/images/
     - assets/icons/
-    - .env
+    - dotenv

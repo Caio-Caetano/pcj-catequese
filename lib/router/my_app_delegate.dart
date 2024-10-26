@@ -3,6 +3,7 @@ import 'package:webapp/controller/config_controller.dart';
 import 'package:webapp/data/auth_repository.dart';
 import 'package:webapp/enums.dart';
 import 'package:webapp/router/my_app_configuration.dart';
+import 'package:webapp/router/pages/form_adulto_adicional_page_route.dart';
 import 'package:webapp/router/pages/form_batismo_page_route.dart';
 import 'package:webapp/router/pages/form_contato_page.dart';
 import 'package:webapp/router/pages/form_endereco_page_route.dart';
@@ -121,6 +122,13 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
   bool? get formLocal => _formLocal;
   set formLocal(value) {
     _formLocal = value;
+    notifyListeners();
+  }
+
+  bool? _formAdicionalAdulto;
+  bool? get formAdicionalAdulto => _formAdicionalAdulto;
+  set formAdicionalAdulto(value) {
+    _formAdicionalAdulto = value;
     notifyListeners();
   }
 
@@ -268,6 +276,7 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
     final formContato = this.formContato;
     final formBatismo = this.formBatismo;
     final formEucaristia = this.formEucaristia;
+    final formAdicionalAdulto = this.formAdicionalAdulto;
     final formLocal = this.formLocal;
 
     final configuracoes = this.configuracoes;
@@ -291,6 +300,14 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       }
     }
 
+    Function() onSubmitAdulto(String etapa) {
+      if (etapa.contains('Adultos')) {
+        return () => this.formAdicionalAdulto = true;
+      } else {
+        return () => this.formLocal = true;
+      }
+    }
+
     return [
       RegisterPageRoute((Turma? turma) => this.formNomes = turma, () => _clear()),
       if (formNomes != null && !isOpen) FormFechadoPageRoute(onSubmit: () => _clear(), etapa: etapa),
@@ -298,7 +315,8 @@ class MyAppRouterDelegate extends RouterDelegate<MyAppConfiguration> with Change
       if (formNomes != null && formEndereco == true) FormEnderecoPageRoute(etapa: etapa, onSubmit: () => this.formContato = true),
       if (formNomes != null && formContato == true) FormContatoPageRoute(etapa: etapa, onSubmit: () => this.formBatismo = true),
       if (formNomes != null && formBatismo == true) FormBatismoPageRoute(etapa: etapa, onSubmit: onSubmitBatismoEucaristia(etapa)),
-      if (formNomes != null && formEucaristia == true) FormEucaristiaPageRoute(etapa: etapa, onSubmit: () => this.formLocal = true),
+      if (formNomes != null && formEucaristia == true) FormEucaristiaPageRoute(etapa: etapa, onSubmit: onSubmitAdulto(etapa)),
+      if (formNomes != null && formAdicionalAdulto == true) FormAdultoAdicionalPageRoute(etapa: etapa, onSubmit: () => this.formLocal = true),
       if (formNomes != null && formLocal == true)
         FormLocalPageRoute(
           etapa: etapa,
