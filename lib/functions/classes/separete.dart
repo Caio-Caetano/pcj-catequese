@@ -11,7 +11,7 @@ Map<String, dynamic> separeteByAge(String bDayString) {
 
   final int monthBDay = birthDate.month;
 
-  var age = getAge(birthDate);
+  var age = getAge(birthDate, 2025);
 
   // --------- [1º Eucaristia] ---------
 

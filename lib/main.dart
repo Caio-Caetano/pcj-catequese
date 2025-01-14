@@ -12,13 +12,11 @@ import 'package:webapp/styles/dark_theme.dart';
 import 'package:webapp/styles/light_theme.dart';
 import 'package:webapp/viewmodels/auth_view_model.dart';
 import 'package:webapp/viewmodels/inscricao_view_model.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   configureApp();
-  // await dotenv.load(fileName: "../../dotenv");
   runApp(const MyApp());
 }
 

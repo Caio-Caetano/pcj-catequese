@@ -73,7 +73,7 @@ class LoginPage extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     const Text('Aviso', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF570808), fontSize: 36)),
-                                    Expanded(child: Text('${snapshot.data!['avisoFechado']}', textAlign: TextAlign.justify, style: const TextStyle(fontSize: 24))),
+                                    Expanded(child: Text('${snapshot.data!['avisoFechado']}', textAlign: TextAlign.center, style: const TextStyle(fontSize: 24))),
                                   ],
                                 ),
                               ),

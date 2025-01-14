@@ -84,26 +84,32 @@ class _ViewDetalhesTurmaState extends State<ViewDetalhesTurma> {
                           Text(snapshot.data!.local!.split('no')[1].trim(), style: Theme.of(context).textTheme.labelMedium),
                           Padding(padding: const EdgeInsets.only(top: 12.0), child: Container(height: 3, width: 50, color: Colors.red)),
                           Text('Ações: ', style: Theme.of(context).textTheme.titleMedium),
-                          ButtonCustom(
-                            textButton: 'Editar turma',
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            icon: Icons.edit,
-                            onTap: () => showDialog(context: context, builder: (context) => _ShowDialogEdit(snapshot.data!.etapa!, snapshot.data!.catequistas, snapshot.data!.local, snapshot.data!.id!)).then(
-                              (value) {
-                                if (value == null || value == false) {
-                                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
-                                } else {
-                                  if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Editado com sucesso!'));
-                                  setState(() {});
-                                }
-                              },
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: ButtonCustom(
+                              textButton: 'Editar turma',
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              icon: Icons.edit,
+                              onTap: () => showDialog(context: context, builder: (context) => _ShowDialogEdit(snapshot.data!.etapa!, snapshot.data!.catequistas, snapshot.data!.local, snapshot.data!.id!)).then(
+                                (value) {
+                                  if (value == null || value == false) {
+                                    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Ação cancelada.'));
+                                  } else {
+                                    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(createSnackBar('Editado com sucesso!'));
+                                    setState(() {});
+                                  }
+                                },
+                              ),
                             ),
                           ),
-                          ButtonCustom(
-                            textButton: 'Remover catequistas',
-                            padding: const EdgeInsets.only(bottom: 10),
-                            icon: Icons.remove_circle_outline,
-                            onTap: () => showDialog(context: context, builder: (context) => _ShowDialogRemove(snapshot.data!.catequistas, snapshot.data!.id!)).then((value) => setState(() {})),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: ButtonCustom(
+                              textButton: 'Remover catequistas',
+                              padding: const EdgeInsets.only(bottom: 10),
+                              icon: Icons.remove_circle_outline,
+                              onTap: () => showDialog(context: context, builder: (context) => _ShowDialogRemove(snapshot.data!.catequistas, snapshot.data!.id!)).then((value) => setState(() {})),
+                            ),
                           ),
                           InkWell(
                             borderRadius: BorderRadius.circular(10),
@@ -136,15 +142,19 @@ class _ViewDetalhesTurmaState extends State<ViewDetalhesTurma> {
                                 }
                               });
                             },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color.fromARGB(255, 140, 235, 143)),
-                              child: Row(
-                                children: [
-                                  if (MediaQuery.of(context).size.width >= 500) Image.asset('./assets/images/excel.png', width: 30),
-                                  if (MediaQuery.of(context).size.width >= 500) const SizedBox(width: 10),
-                                  Text('Lista de presença', style: Theme.of(context).textTheme.labelMedium),
-                                ],
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 300),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color.fromARGB(255, 140, 235, 143)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (MediaQuery.of(context).size.width >= 500) Image.asset('./assets/images/excel.png', width: 30),
+                                    if (MediaQuery.of(context).size.width >= 500) const SizedBox(width: 10),
+                                    Text('Lista de presença', style: Theme.of(context).textTheme.labelMedium),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

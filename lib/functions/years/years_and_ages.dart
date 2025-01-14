@@ -1,7 +1,7 @@
-int getAge(DateTime bDay) {
+int getAge(DateTime bDay, int anoReferencia) {
   DateTime currentDate = DateTime.now();
-  currentDate = DateTime(currentDate.year, 12, 31);
-  int age = currentDate.year - bDay.year;
+  currentDate = DateTime(anoReferencia, 12, 31);
+  int age = anoReferencia - bDay.year;
 
   int birthMonth = bDay.month;
   int currentMonth = currentDate.month;

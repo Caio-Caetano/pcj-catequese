@@ -91,22 +91,20 @@ Future<void> exportToExcel(List<Map<String, dynamic>> data) async {
 
 Future<void> exportListaPresenca(List<String> data, String mes) async {
   var excel = Excel.createExcel();
-  excel.rename('Sheet1', '${DateTime.now().year}_$mes');
-  var sheet = excel['${DateTime.now().year}_$mes'];
-
+  var sheet = excel['Sheet1'];
+  
   // Adiciona os Header
-  sheet.merge(CellIndex.indexByString('B1'), CellIndex.indexByString('F1'), customValue: mes);
+  sheet.merge(CellIndex.indexByString('B1'), CellIndex.indexByString('F1'));
+  sheet.cell(CellIndex.indexByString('B1')).value = mes;
 
-  // Adiciona leganda DATA
-  sheet.cell(CellIndex.indexByString('A2')).value = 'Data';
-
-  // Adicione NOMES
+  // Adiciona NOMES
   var indexRow = 2;
   for (var singleData in data) {
     sheet.cell(CellIndex.indexByColumnRow(rowIndex: indexRow, columnIndex: 0)).value = singleData;
     indexRow++;
   }
 
+  // Estilo de cabeçalho
   CellStyle headerStyle = CellStyle(
     horizontalAlign: HorizontalAlign.Center,
     verticalAlign: VerticalAlign.Center,
@@ -117,10 +115,11 @@ Future<void> exportListaPresenca(List<String> data, String mes) async {
     bottomBorder: Border(borderStyle: BorderStyle.Thin, borderColorHex: '#000000'),
   );
 
-  for (var i = 1; i <= 5; i++) {
+  // Aplicar estilo apenas no cabeçalho
+  for (var i = 0; i <= 5; i++) {
     sheet.cell(CellIndex.indexByColumnRow(rowIndex: 0, columnIndex: i)).cellStyle = headerStyle;
   }
 
   // Salve o arquivo
-  excel.save(fileName: 'lista_presenca_${DateTime.now().year}.xlsx');
+  excel.save(fileName: 'lista_presenca_${mes}_${DateTime.now().year}.xlsx');
 }

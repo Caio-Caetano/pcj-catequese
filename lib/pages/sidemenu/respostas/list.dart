@@ -1,6 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:toastification/toastification.dart';
 import 'package:webapp/controller/respostas_controller.dart';
 import 'package:webapp/controller/turma_controller.dart';

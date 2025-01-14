@@ -94,7 +94,7 @@ void configureModalBottomSheet(BuildContext context, Function(int, String?, Stri
                             if (keyForm.currentState!.validate()) {
                               final authViewModel2 = context.read<AuthViewModel>();
                               final result = await authViewModel.login(UserModel(
-                                username: usernameController.text.trim(),
+                                username: usernameController.text.toLowerCase().trim(),
                                 senha: passwordController.text.trim(),
                               ));
                               if (result != null) {
